@@ -5,10 +5,10 @@ import { usePathname } from "next/navigation";
 import { Award, Lock } from "lucide-react";
 import { ProducerPortrait } from "@/components/ui/ProducerPortrait";
 import { studentNavItems } from "@/components/student/student-nav";
-import { tenant } from "@/lib/tenant";
+import type { TenantRecord } from "@/lib/tenant";
 import { cn } from "@/lib/cn";
 
-export function StudentSidebar() {
+export function StudentSidebar({ tenantRecord }: { tenantRecord: TenantRecord }) {
   const pathname = usePathname();
 
   return (
@@ -18,10 +18,10 @@ export function StudentSidebar() {
     >
       <div className="flex items-center gap-4">
         <span className="block h-14 w-14 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
-          <ProducerPortrait />
+          <ProducerPortrait portrait={tenantRecord.portrait} />
         </span>
         <div className="min-w-0">
-          <p className="truncate font-serif text-lg leading-none text-pearl">{tenant.brand}</p>
+          <p className="truncate font-serif text-lg leading-none text-pearl">{tenantRecord.brand}</p>
           <p className="mt-1 text-[10px] uppercase tracking-[0.16em] text-white/40">Espaço da aluna</p>
         </div>
       </div>
@@ -30,15 +30,15 @@ export function StudentSidebar() {
         <div
           className="h-[3px] overflow-hidden rounded-full bg-white/10"
           role="progressbar"
-          aria-valuenow={tenant.courseProgress}
+          aria-valuenow={tenantRecord.courseProgress}
           aria-valuemin={0}
           aria-valuemax={100}
           aria-label="Progresso do curso"
         >
-          <div className="h-full rounded-full bg-pearl" style={{ width: `${tenant.courseProgress}%` }} />
+          <div className="h-full rounded-full bg-pearl" style={{ width: `${tenantRecord.courseProgress}%` }} />
         </div>
         <p className="mt-2 text-[10px] uppercase tracking-[0.16em] text-white/40">
-          {tenant.courseProgress}% concluído
+          {tenantRecord.courseProgress}% concluído
         </p>
       </div>
 

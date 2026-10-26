@@ -85,7 +85,7 @@ function PageNavigation({
   );
 }
 
-export function ApostilaReader() {
+export function ApostilaReader({ portrait }: { portrait: string }) {
   const [pageId, setPageId] = useState<PageId | null>(null);
   const [drawer, setDrawer] = useState(false);
   const [video, setVideo] = useState(false);
@@ -151,7 +151,9 @@ export function ApostilaReader() {
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
             >
-              {pageId === "abertura" ? <ManifestoPage onWatch={() => setVideo(true)} /> : null}
+              {pageId === "abertura" ? (
+                <ManifestoPage onWatch={() => setVideo(true)} portrait={portrait} />
+              ) : null}
               {pageId === "oswald" ? <OswaldPage onWatch={() => setVideo(true)} /> : null}
               {pageId === "oxidantes" ? <OxidantsPage onWatch={() => setVideo(true)} /> : null}
             </motion.div>

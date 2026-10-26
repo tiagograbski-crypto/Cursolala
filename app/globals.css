@@ -1,7 +1,13 @@
 @import "tailwindcss";
-@config "../tailwind.config.mjs";
+@config "../tailwind.config.ts";
 
 @theme {
+  /* Tokens oficiais GL PRO */
+  --color-perola: #fdfbf7;
+  --color-verde-mate: #6b705c;
+  --color-marrom: #4a3b32;
+
+  /* Aliases técnicos */
   --color-pearl: #fdfbf7;
   --color-pearl-deep: #f3eee6;
   --color-paper: #fdfbf7;
@@ -16,6 +22,16 @@
   --shadow-card: 0 24px 60px -36px rgb(74 59 50 / 0.28);
   --shadow-float: 0 16px 40px -24px rgb(107 112 92 / 0.45);
   --animate-shake: shake 0.42s ease;
+  --animate-shimmer: shimmer 2.4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 120% 50%;
+  }
+  100% {
+    background-position: -20% 50%;
+  }
 }
 
 @keyframes shake {
@@ -78,6 +94,24 @@
   }
 }
 
+@layer utilities {
+  .masterglass-shimmer {
+    background-image: linear-gradient(
+      105deg,
+      #fdfbf7 0%,
+      #fdfbf7 38%,
+      rgb(255 255 255 / 0.92) 50%,
+      #fdfbf7 62%,
+      #fdfbf7 100%
+    );
+    background-size: 220% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 2.4s ease-in-out infinite;
+  }
+}
+
 .reading p:not(.font-serif),
 .reading li,
 .reading blockquote {
@@ -85,4 +119,14 @@
   color: #4a3b32;
   font-size: 1.02rem;
   line-height: 1.75;
+}
+
+/* Ilhas Glass Chumbo dentro do leitor: tipografia pérola, não marrom de leitura */
+.reading [data-glass-surface] p,
+.reading [data-glass-surface] span {
+  color: #fdfbf7;
+}
+
+.text-pearl-muted {
+  color: rgb(253 251 247 / 0.72);
 }

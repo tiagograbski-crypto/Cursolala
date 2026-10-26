@@ -6,35 +6,41 @@ import { BottomNav } from "@/components/student/BottomNav";
 import { StudentSidebar } from "@/components/student/StudentSidebar";
 import { SessionGate } from "@/components/layouts/SessionGate";
 import { ProducerPortrait } from "@/components/ui/ProducerPortrait";
-import { tenant } from "@/lib/tenant";
+import type { TenantRecord } from "@/lib/tenant";
 
-export function StudentLayout({ children }: { children: ReactNode }) {
+export function StudentLayout({
+  children,
+  tenantRecord,
+}: {
+  children: ReactNode;
+  tenantRecord: TenantRecord;
+}) {
   return (
     <SessionGate role="aluna">
       <div className="min-h-dvh bg-pearl">
         <div className="mx-auto flex min-h-dvh w-full max-w-[1920px]">
-          <StudentSidebar />
+          <StudentSidebar tenantRecord={tenantRecord} />
 
           <div className="flex min-h-dvh min-w-0 flex-1 flex-col">
             <header className="sticky top-0 z-30 border-b border-white/10 bg-zinc-950/80 text-pearl shadow-2xl backdrop-blur-3xl lg:hidden">
               <div className="mx-auto flex w-full max-w-lg items-center gap-4 px-6 py-4">
                 <span className="block h-12 w-12 shrink-0 overflow-hidden rounded-full ring-1 ring-white/10">
-                  <ProducerPortrait />
+                  <ProducerPortrait portrait={tenantRecord.portrait} />
                 </span>
                 <div className="min-w-0 flex-1">
-                  <p className="truncate font-serif text-[17px] leading-none text-pearl">{tenant.brand}</p>
+                  <p className="truncate font-serif text-[17px] leading-none text-pearl">{tenantRecord.brand}</p>
                   <div
                     className="mt-2.5 h-[3px] overflow-hidden rounded-full bg-white/10"
                     role="progressbar"
-                    aria-valuenow={tenant.courseProgress}
+                    aria-valuenow={tenantRecord.courseProgress}
                     aria-valuemin={0}
                     aria-valuemax={100}
                     aria-label="Progresso do curso"
                   >
-                    <div className="h-full rounded-full bg-pearl" style={{ width: `${tenant.courseProgress}%` }} />
+                    <div className="h-full rounded-full bg-pearl" style={{ width: `${tenantRecord.courseProgress}%` }} />
                   </div>
                   <p className="mt-1.5 text-[10px] uppercase tracking-[0.16em] text-white/40">
-                    {tenant.courseProgress}% concluído
+                    {tenantRecord.courseProgress}% concluído
                   </p>
                 </div>
                 <button
