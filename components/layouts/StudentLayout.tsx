@@ -4,6 +4,7 @@ import type { ReactNode } from "react";
 import { Award, Lock } from "lucide-react";
 import { BottomNav } from "@/components/student/BottomNav";
 import { StudentSidebar } from "@/components/student/StudentSidebar";
+import { OswaldPreloader } from "@/components/OswaldPreloader";
 import { SessionGate } from "@/components/layouts/SessionGate";
 import { ProducerPortrait } from "@/components/ui/ProducerPortrait";
 import type { TenantRecord } from "@/lib/tenant";
@@ -17,6 +18,7 @@ export function StudentLayout({
 }) {
   return (
     <SessionGate role="aluna">
+      <OswaldPreloader>
       <div className="min-h-dvh bg-pearl">
         <div className="mx-auto flex min-h-dvh w-full max-w-[1920px]">
           <StudentSidebar tenantRecord={tenantRecord} />
@@ -66,6 +68,7 @@ export function StudentLayout({
         </div>
         <BottomNav />
       </div>
+      </OswaldPreloader>
     </SessionGate>
   );
 }

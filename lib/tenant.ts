@@ -1,3 +1,4 @@
+/** Perfil fixo da Casa MASTERGLASS (Alaíde / Lala). Single-tenant — sem resolução por subdomínio. */
 export type TenantRecord = {
   id: string;
   slug: string;
@@ -10,37 +11,20 @@ export type TenantRecord = {
   status: "active" | "suspended" | "pending";
 };
 
-const TENANTS: Record<string, TenantRecord> = {
-  alaide: {
-    id: "alaide-proenca",
-    slug: "alaide",
-    brand: "Alaíde Proença",
-    portrait: "/alaide-proenca.jpg",
-    discipline: "Colorimetria",
-    courseProgress: 35,
-    rentalFeeCents: 1800,
-    maskedDocument: "***.***.***-**",
-    status: "active",
-  },
-  lala: {
-    id: "lala-academy",
-    slug: "lala",
-    brand: "Lala Academy",
-    portrait: "/alaide-proenca.jpg",
-    discipline: "Colorimetria",
-    courseProgress: 0,
-    rentalFeeCents: 1800,
-    maskedDocument: "***.***.***-**",
-    status: "active",
-  },
+const MASTERGLASS: TenantRecord = {
+  id: "lala-academy",
+  slug: "lala",
+  brand: "MASTERGLASS · Alaíde Proença",
+  portrait: "/alaide-proenca.jpg",
+  discipline: "Colorimetria",
+  courseProgress: 0,
+  rentalFeeCents: 1800,
+  maskedDocument: "***.***.***-**",
+  status: "active",
 };
 
-export async function resolveTenantBySlug(slugInput: string): Promise<TenantRecord | null> {
-  return TENANTS[slugInput] ?? null;
-}
-
-export function tenantSlugExists(slug: string): boolean {
-  return Object.prototype.hasOwnProperty.call(TENANTS, slug);
+export function getMvpTenant(): TenantRecord {
+  return MASTERGLASS;
 }
 
 export function formatBRL(cents: number) {
@@ -52,6 +36,16 @@ export function formatBRL(cents: number) {
 
 function whatsAppShareUrl(message: string) {
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
+}
+
+/** Concierge — só dígitos (DDI 55 + DDD + número). Edite aqui. */
+export const WHATSAPP_CONCIERGE_E164 = "55SEUNUMERO";
+
+export function conciergeWhatsAppUrl() {
+  const text = encodeURIComponent(
+    "Olá, gostaria de pleitear uma credencial para a imersão Masterglass.",
+  );
+  return `https://wa.me/${WHATSAPP_CONCIERGE_E164}?text=${text}`;
 }
 
 export function agencyWhatsAppUrl() {

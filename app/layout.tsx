@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
+import { Preloader } from "@/components/ui/Preloader";
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -30,7 +31,13 @@ export const viewport: Viewport = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
-      <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>{children}</body>
+      <head>
+        <link rel="preload" as="image" href="/images/alaide-ghost.jpg" />
+      </head>
+      <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>
+        <Preloader />
+        <div data-vitrine-shell="">{children}</div>
+      </body>
     </html>
   );
 }

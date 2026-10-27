@@ -6,9 +6,10 @@ import { Button, buttonClass } from "@/components/ui/Button";
 import { fieldClass, FieldLabel } from "@/components/ui/Field";
 import { createLicenseCode, readLicenses, writeLicenses, type IssuedLicense } from "@/lib/licenses";
 import { licenseWhatsAppUrl } from "@/lib/tenant";
+import type { TenantRecord } from "@/lib/tenant";
 import { cn } from "@/lib/cn";
 
-export function LicenseDesk() {
+export function LicenseDesk({ tenantRecord }: { tenantRecord: TenantRecord }) {
   const [studentName, setStudentName] = useState("");
   const [issued, setIssued] = useState<IssuedLicense | null>(null);
   const [recent, setRecent] = useState<IssuedLicense[]>([]);
@@ -91,7 +92,7 @@ export function LicenseDesk() {
               </Button>
               <a
                 className={buttonClass("primary", false, "px-3 py-3 text-[12px]")}
-                href={licenseWhatsAppUrl(issued.code, issued.studentName)}
+                href={licenseWhatsAppUrl(tenantRecord.brand, issued.code, issued.studentName)}
                 target="_blank"
                 rel="noopener noreferrer"
               >

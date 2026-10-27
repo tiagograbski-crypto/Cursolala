@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { TenantLayout } from "@/components/layouts/TenantLayout";
+import { ProducerLayout } from "@/components/layouts/ProducerLayout";
+import { getMvpTenant } from "@/lib/tenant";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return <TenantLayout>{children}</TenantLayout>;
+  return <ProducerLayout tenantRecord={getMvpTenant()}>{children}</ProducerLayout>;
 }

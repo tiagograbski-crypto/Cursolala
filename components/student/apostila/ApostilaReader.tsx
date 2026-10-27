@@ -124,8 +124,10 @@ function PageNavigation({
           aria-label="Página anterior"
         >
           <ChevronLeft strokeWidth={1.5} className="h-4 w-4" />
-          <span className="hidden sm:inline">Pág {String(currentPage - 1).padStart(2, "0")}</span>
-          <span className="sm:hidden">Anterior</span>
+          {hasPrev ? (
+            <span className="hidden sm:inline">Pág {String(currentPage - 1).padStart(2, "0")}</span>
+          ) : null}
+          <span className={hasPrev ? "sm:hidden" : undefined}>Anterior</span>
         </button>
 
         <div className="text-center">
@@ -150,8 +152,10 @@ function PageNavigation({
           )}
           aria-label="Próxima página"
         >
-          <span className="hidden sm:inline">Pág {String(currentPage + 1).padStart(2, "0")}</span>
-          <span className="sm:hidden">Próxima</span>
+          {hasNext ? (
+            <span className="hidden sm:inline">Pág {String(currentPage + 1).padStart(2, "0")}</span>
+          ) : null}
+          <span className={hasNext ? "sm:hidden" : undefined}>Próxima</span>
           <ChevronRight strokeWidth={1.5} className="h-4 w-4" />
         </button>
       </div>

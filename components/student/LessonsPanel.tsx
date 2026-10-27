@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { Lock } from "lucide-react";
 import { OswaldStar } from "@/components/student/apostila/OswaldStar";
 import { Button } from "@/components/ui/Button";
 import { READER_PAGE_KEY, LESSON_ENTRY_PAGE, apostilaPages, type PageId } from "@/lib/apostila";
@@ -26,7 +25,7 @@ const trilhaCopy: Record<PageId, TrilhaCopy> = {
   },
   oswald: {
     label: "Trilha 02 · Neutralização",
-    session: "A Estrela de Oswald: A Bússola da Neutralização",
+    session: "Estrela de Oswald: A Bússola da Neutralização",
     benefit:
       "Domine a engenharia dos opostos. Elimine o chute, apague reflexos indesejados e crie o loiro espelhado que sua cliente exige.",
   },
@@ -36,12 +35,6 @@ const trilhaCopy: Record<PageId, TrilhaCopy> = {
     benefit:
       "Volumagem não é intuição, é ciência. O cálculo exato para ancoragem de cor e durabilidade extrema.",
   },
-};
-
-const locked = {
-  title: "Protocolos Avançados de Lavatório",
-  duration: "Sessão · 18 min",
-  note: "Libera após concluir as trilhas de neutralização e oxidantes.",
 };
 
 // ─── Componente principal ──────────────────────────────────────────────────
@@ -71,8 +64,8 @@ export function LessonsPanel() {
       </p>
 
       {/* Grade de trilhas */}
-      <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3 3xl:grid-cols-4">
-        {apostilaPages.map((page, index) => {
+      <ul className="mt-6 grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {apostilaPages.map((page) => {
           const copy = trilhaCopy[page.id];
           const isOswald = page.id === "oswald";
 
@@ -140,27 +133,6 @@ export function LessonsPanel() {
             </li>
           );
         })}
-
-        {/* Módulo bloqueado */}
-        <li className="rounded-3xl bg-pearl px-6 py-7 text-ink shadow-card md:col-span-2 xl:col-span-1 3xl:col-span-1">
-          <div className="flex items-start gap-4">
-            <span className="mt-0.5 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-pearl-deep text-ink">
-              <Lock strokeWidth={1.5} className="h-4 w-4" />
-            </span>
-            <div>
-              <p className="text-[10px] uppercase tracking-[0.16em] text-ink-soft">
-                Módulo bloqueado
-              </p>
-              <h2 className="mt-1 font-serif text-xl leading-tight text-ink">
-                {locked.title}
-              </h2>
-              <p className="mt-1 text-sm text-ink-soft">
-                {locked.duration} ·{" "}
-                <span className="text-ink-soft/70">{locked.note}</span>
-              </p>
-            </div>
-          </div>
-        </li>
       </ul>
     </div>
   );
