@@ -60,7 +60,7 @@ export function StudentLayout({
             </header>
 
             <main
-              className="flex-1 px-5 pt-6 pb-[calc(8rem+env(safe-area-inset-bottom))] md:px-8 md:pt-8 lg:px-10 lg:pb-12 lg:pt-10 2xl:px-14"
+              className="flex-1 px-5 pt-6 pb-[calc(5.75rem+env(safe-area-inset-bottom))] md:px-8 md:pt-8 lg:px-10 lg:pb-12 lg:pt-10 2xl:px-14"
             >
               <div className="mx-auto w-full max-w-lg md:max-w-3xl lg:max-w-5xl 2xl:max-w-7xl">{children}</div>
             </main>

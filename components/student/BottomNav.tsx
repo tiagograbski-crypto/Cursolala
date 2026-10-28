@@ -9,12 +9,9 @@ export function BottomNav() {
   const pathname = usePathname();
 
   return (
-    <nav
-      className="fixed inset-x-0 bottom-0 z-40 bg-gradient-to-t from-pearl from-35% to-transparent px-4 pb-4 pt-8 lg:hidden"
-      aria-label="Navegação da aluna"
-    >
-      <div className="mx-auto w-full max-w-lg rounded-3xl border border-ink/8 bg-pearl/92 px-3 py-2.5 pb-[max(0.35rem,env(safe-area-inset-bottom))] text-ink shadow-float backdrop-blur-lg">
-        <ul className="grid grid-cols-4 gap-1">
+    <nav className="fixed inset-x-0 bottom-0 z-40 lg:hidden" aria-label="Navegação da aluna">
+      <div className="masterglass-silver-glass rounded-none border-x-0 border-b-0 bg-zinc-950/80 px-1 pt-1 pb-[max(0.4rem,env(safe-area-inset-bottom))]">
+        <ul className="mx-auto grid max-w-lg grid-cols-4">
           {studentNavItems.map((tab) => {
             const active = pathname === tab.href;
             const Icon = tab.icon;
@@ -24,19 +21,19 @@ export function BottomNav() {
                   href={tab.href}
                   aria-current={active ? "page" : undefined}
                   className={cn(
-                    "flex flex-col items-center gap-1 rounded-2xl px-2 py-2 text-[10px] font-semibold tracking-wide transition",
-                    active ? "text-ink" : "text-ink/40 hover:text-ink",
+                    "relative flex flex-col items-center gap-1 px-2 py-2.5 text-[9px] font-medium tracking-[0.16em] transition",
+                    active ? "text-white" : "text-white/40 hover:text-white/80",
                   )}
                 >
+                  <Icon strokeWidth={1.4} className="h-[18px] w-[18px]" />
+                  {tab.label}
                   <span
                     className={cn(
-                      "flex h-8 w-8 items-center justify-center rounded-full",
-                      active && "bg-pearl-deep shadow-card",
+                      "absolute inset-x-7 bottom-1 h-px bg-white/80 transition-opacity",
+                      active ? "opacity-100" : "opacity-0",
                     )}
-                  >
-                    <Icon strokeWidth={1.5} className="h-[18px] w-[18px]" />
-                  </span>
-                  {tab.label}
+                    aria-hidden
+                  />
                 </Link>
               </li>
             );

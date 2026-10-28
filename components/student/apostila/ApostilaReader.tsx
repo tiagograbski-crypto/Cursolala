@@ -105,7 +105,7 @@ function PageNavigation({
   const chapter = getChapterByPage(currentPage);
 
   return (
-    <div className="sticky bottom-[calc(7.5rem+env(safe-area-inset-bottom))] z-30 mt-auto pt-6 lg:bottom-6">
+    <div className="sticky bottom-[calc(4.65rem+env(safe-area-inset-bottom))] z-30 mt-auto pt-6 lg:bottom-6">
       <div
         className="flex items-center justify-between gap-2 rounded-[28px] bg-pearl px-3 py-3 text-ink shadow-card sm:gap-3 sm:px-4"
       >

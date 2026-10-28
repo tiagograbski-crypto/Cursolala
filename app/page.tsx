@@ -1,8 +1,12 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { useLayoutEffect, useState } from "react";
 import { HandoffStickyCta } from "@/components/home/HandoffStickyCta";
 import { HomeFounderStage } from "@/components/home/HomeFounderStage";
-import { SNAP_CARD, SnapRail } from "@/components/home/SnapRail";
+import { SnapRail } from "@/components/home/SnapRail";
+import { SNAP_CARD, SNAP_SLIDE } from "@/components/home/snapClasses";
 import {
   Award,
   BookOpen,
@@ -12,7 +16,6 @@ import {
   Fingerprint,
   FlaskConical,
   Lock,
-  Sigma,
   Sparkles,
   Star,
   X,
@@ -80,13 +83,6 @@ const ACERVO = [
     icon: BookOpen,
   },
   {
-    id: "02",
-    kicker: "Neutralização",
-    title: "Estrela de Oswald",
-    benefit: "Mata o reflexo com matemática. Sem chute na bancada.",
-    icon: Sigma,
-  },
-  {
     id: "03",
     kicker: "Oxidantes",
     title: "Química de Fixação",
@@ -97,16 +93,24 @@ const ACERVO = [
 
 const TESTIMONIALS = [
   {
-    quote:
-      "Eu tremia na hora de descolorir um cabelo fino. Hoje, o fundo de clareamento me obedece. O método mudou a lucratividade da minha cadeira.",
+    quote: "O fundo de clareamento me obedece. Parei de tremer na descoloração.",
     name: "Mariana S.",
     role: "Colorista",
   },
   {
-    quote:
-      "Não é um curso, é uma formação de caráter químico. Parei de comprar 'receitinhas' e comecei a formular com segurança absoluta.",
+    quote: "Parei de comprar receitinhas. Agora eu formulo.",
     name: "Camila T.",
     role: "Especialista em Loiros",
+  },
+  {
+    quote: "Neutralização no reflexo, sem chute. A bancada ficou previsível.",
+    name: "Letícia R.",
+    role: "Colorista",
+  },
+  {
+    quote: "O método mudou o valor da minha cadeira. Matemática, não sorte.",
+    name: "Patrícia M.",
+    role: "Correção de Cor",
   },
 ] as const;
 
@@ -140,6 +144,104 @@ const ADMISSION_STEPS = [
   "Recebimento do passaporte presencial e liberação do Acervo.",
 ] as const;
 
+/** Hexagrama 200²: laranja no vértice superior esquerdo, azul no oposto. */
+const OSWALD_UP = "100,20 169.28,140 30.72,140";
+const OSWALD_DOWN = "100,180 30.72,60 169.28,60";
+const OSWALD_ORANGE = { x: 30.72, y: 60 };
+const OSWALD_BLUE = { x: 169.28, y: 140 };
+
+function OswaldLab() {
+  const [isNeutralized, setIsNeutralized] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={() => setIsNeutralized(true)}
+      aria-pressed={isNeutralized}
+      aria-label={
+        isNeutralized
+          ? "Neutralização exata: laranja anulado pelo azul"
+          : "O pesadelo: fundo laranja. Toque para aplicar a matemática"
+      }
+      className={`relative flex aspect-square w-full cursor-pointer touch-manipulation select-none flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/5 bg-zinc-950 transition-transform duration-200 active:scale-[0.98] md:aspect-video ${CTA_FOCUS}`}
+    >
+      <svg
+        viewBox="0 0 200 200"
+        className="h-[78%] w-[78%] max-h-[28rem] max-w-[28rem] transition-all duration-700 ease-in-out"
+        fill="none"
+        aria-hidden
+      >
+        <polygon
+          points={OSWALD_UP}
+          className={`transition-all duration-700 ease-in-out ${isNeutralized ? "stroke-white/35" : "stroke-white/20"}`}
+          strokeWidth="1.2"
+        />
+        <polygon
+          points={OSWALD_DOWN}
+          className={`transition-all duration-700 ease-in-out ${isNeutralized ? "stroke-white/35" : "stroke-white/20"}`}
+          strokeWidth="1.2"
+        />
+        <circle
+          cx={OSWALD_ORANGE.x}
+          cy={OSWALD_ORANGE.y}
+          r={isNeutralized ? 3.2 : 5.5}
+          className={`origin-center transition-all duration-700 ease-in-out ${
+            isNeutralized
+              ? "fill-orange-400/40"
+              : "fill-orange-400 animate-pulse shadow-orange-500/50 motion-reduce:animate-none"
+          }`}
+        />
+        <circle
+          cx={OSWALD_BLUE.x}
+          cy={OSWALD_BLUE.y}
+          r={isNeutralized ? 5.5 : 2.4}
+          className={`transition-all duration-700 ease-in-out ${
+            isNeutralized ? "fill-blue-400" : "fill-white/25"
+          }`}
+        />
+        <g className="mix-blend-screen">
+          <line
+            x1={OSWALD_ORANGE.x}
+            y1={OSWALD_ORANGE.y}
+            x2={OSWALD_BLUE.x}
+            y2={OSWALD_BLUE.y}
+            className={`stroke-blue-400 drop-shadow-[0_0_12px_rgba(96,165,250,0.8)] transition-all duration-700 ease-in-out ${
+              isNeutralized ? "opacity-100" : "opacity-0"
+            }`}
+            strokeWidth="2"
+            strokeLinecap="round"
+          />
+        </g>
+      </svg>
+
+      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-8">
+        <p
+          className={`max-w-[14rem] text-center font-serif text-[15px] leading-snug text-pearl transition-all duration-700 ease-in-out md:text-lg ${
+            isNeutralized ? "translate-y-1 opacity-0" : "translate-y-0 opacity-100"
+          }`}
+        >
+          O Pesadelo: Fundo Laranja
+        </p>
+        <p
+          className={`absolute max-w-[16rem] text-center font-serif text-[15px] leading-snug text-pearl transition-all duration-700 ease-in-out md:text-lg ${
+            isNeutralized ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
+          }`}
+        >
+          Neutralização Exata: Laranja anulado pelo Azul.
+        </p>
+      </div>
+
+      <span
+        className={`absolute top-6 left-1/2 w-[min(90%,20rem)] -translate-x-1/2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-white/70 transition-all duration-700 ease-in-out ${
+          isNeutralized ? "pointer-events-none opacity-0" : "animate-pulse motion-reduce:animate-none"
+        }`}
+      >
+        Toque para Aplicar a Matemática
+      </span>
+    </button>
+  );
+}
+
 function StarRow() {
   return (
     <div className="flex gap-0.5" aria-label="5 estrelas">
@@ -151,8 +253,14 @@ function StarRow() {
 }
 
 export default function MasterglassVitrinePage() {
+  useLayoutEffect(() => {
+    const root = document.documentElement;
+    root.classList.add("vitrine-native");
+    return () => root.classList.remove("vitrine-native");
+  }, []);
+
   return (
-    <div className="min-h-dvh bg-zinc-950 text-pearl scheme-dark selection:bg-white/20 selection:text-pearl">
+    <div className="min-h-dvh overscroll-none bg-zinc-950 text-pearl scheme-dark selection:bg-white/20 selection:text-pearl">
       <a
         href="#vitrine-hero"
         className={`sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-zinc-950 ${CTA_FOCUS}`}
@@ -243,26 +351,32 @@ export default function MasterglassVitrinePage() {
           <div className={SHELL}>
             <h2 className="font-serif text-xl font-medium text-pearl md:text-2xl">O Acervo Digital</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/55">
-              Três protocolos da bancada. Do diagnóstico ao oxidante.
+              Do diagnóstico ao oxidante. No centro, a matemática que mata o reflexo.
             </p>
-            <ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:grid lg:grid-cols-3 lg:gap-5">
-              {ACERVO.map(({ id, kicker, title, benefit, icon: Icon }) => (
+            <ul className="mt-6 flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-5">
+              {ACERVO.map((item) => (
                 <li
-                  key={id}
-                  className="masterglass-silver-glass flex w-full min-w-0 flex-col gap-3 rounded-2xl p-5 text-pearl lg:h-full lg:gap-5 lg:p-6"
+                  key={item.id}
+                  className="masterglass-silver-glass flex w-full min-w-0 flex-col gap-3 rounded-2xl p-5 text-pearl lg:gap-5 lg:p-6"
                 >
                   <span className="flex items-center gap-3">
-                    <span className="font-serif text-3xl leading-none text-white/35">{id}</span>
-                    <Icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
+                    <span className="font-serif text-3xl leading-none text-white/35">{item.id}</span>
+                    <item.icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
                   </span>
                   <div className="min-w-0">
-                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">{kicker}</p>
-                    <p className="mt-1 font-serif text-xl leading-snug text-pearl">{title}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-white/60">{benefit}</p>
+                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">{item.kicker}</p>
+                    <p className="mt-1 font-serif text-xl leading-snug text-pearl">{item.title}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-white/60">{item.benefit}</p>
                   </div>
                 </li>
               ))}
             </ul>
+            <p className="mt-10 text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
+              Laboratório · Estrela de Oswald
+            </p>
+            <div className="mt-4">
+              <OswaldLab />
+            </div>
           </div>
         </section>
 
@@ -324,21 +438,21 @@ export default function MasterglassVitrinePage() {
             <h2 className="font-serif text-2xl font-medium text-pearl">O Padrão Masterglass</h2>
           </div>
           <div className="mt-8">
-            <SnapRail ariaLabel="Depoimentos de coloristas" count={TESTIMONIALS.length} columnsMd={2}>
+            <SnapRail ariaLabel="Depoimentos de coloristas" count={TESTIMONIALS.length} keepRail>
               {TESTIMONIALS.map(({ quote, name, role }) => (
                 <li
                   key={name}
-                  className={`masterglass-silver-glass flex min-h-[16rem] flex-col gap-6 rounded-2xl p-8 text-pearl ${SNAP_CARD}`}
+                  className={`masterglass-silver-glass flex flex-col gap-4 rounded-2xl p-6 text-pearl ${SNAP_SLIDE}`}
                 >
                   <StarRow />
-                  <blockquote className="font-serif text-base leading-relaxed text-white/85 md:text-lg">
+                  <blockquote className="font-serif text-[15px] leading-snug text-white/85">
                     &ldquo;{quote}&rdquo;
                   </blockquote>
-                  <footer className="mt-auto text-sm text-white/55">
+                  <p className="mt-auto text-sm text-white/55">
                     <span className="font-medium text-pearl/90">{name}</span>
                     <span className="text-white/40"> · </span>
                     {role}
-                  </footer>
+                  </p>
                 </li>
               ))}
             </SnapRail>
@@ -346,24 +460,24 @@ export default function MasterglassVitrinePage() {
         </section>
 
         <section className={`${SECTION_X} ${SECTION_Y}`}>
-          <div className={`${SHELL} grid grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-12`}>
+          <div className={`${SHELL} relative mx-auto max-w-lg`}>
             <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-zinc-900">
               <Image
                 src={asset("/images/alaide-bg.jpg")}
                 alt="Alaíde Proença"
                 fill
                 unoptimized
-                sizes="(min-width: 1024px) 50vw, 100vw"
+                sizes="(min-width: 1024px) 32rem, 100vw"
                 className="object-cover object-[center_12%]"
               />
             </div>
-            <div className="masterglass-silver-glass rounded-2xl p-6 text-pearl lg:p-10">
-              <h2 className="font-serif text-[clamp(2rem,4vw,3.5rem)] font-medium leading-none text-pearl">
+            <div className="masterglass-silver-glass relative z-10 mx-4 -mt-14 rounded-2xl p-6 text-pearl sm:mx-6 sm:-mt-16 lg:p-8">
+              <h2 className="font-serif text-[clamp(1.85rem,4vw,2.75rem)] font-medium leading-none text-pearl">
                 Alaíde Proença
               </h2>
-              <ul className="mt-6 space-y-3">
+              <ul className="mt-5 space-y-2.5">
                 {MENTOR_POINTS.map((point) => (
-                  <li key={point} className="flex items-start gap-3 text-sm text-white/75 md:text-base">
+                  <li key={point} className="flex items-start gap-3 text-sm text-white/75">
                     <Sparkles className="mt-0.5 size-4 shrink-0 text-white/40" strokeWidth={1.5} aria-hidden />
                     {point}
                   </li>
@@ -441,16 +555,32 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <footer className={`border-t border-white/5 ${SECTION_X} py-[clamp(3rem,6vw,5rem)]`}>
-          <p className="text-center text-[10px] uppercase tracking-[0.3em] text-white/30">Powered by GL PRO</p>
-          <p className="mt-6 text-center">
-            <Link
-              href="/aluna/login"
-              className={`inline-flex min-h-11 items-center text-[11px] tracking-wide text-white/35 transition hover:text-white/60 ${CTA_FOCUS}`}
-            >
-              Acesso de Alunas
-            </Link>
-          </p>
+        <footer
+          className={`border-t border-white/5 ${SECTION_X} pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-[clamp(3rem,6vw,5rem)]`}
+        >
+          <div className={`${SHELL} flex flex-col gap-10 md:flex-row md:items-end md:justify-between`}>
+            <div>
+              <p className="text-xs tracking-[0.28em] text-white">MASTERGLASS</p>
+              <p className="mt-1 text-[10px] tracking-[0.22em] text-pearl/55">COLORIMETRIA</p>
+              <p className="mt-4 max-w-xs text-sm leading-relaxed text-white/45">
+                Módulo presencial com a Alaíde Proença. 22 de novembro.
+              </p>
+            </div>
+            <nav className="flex flex-col gap-3 text-sm" aria-label="Rodapé">
+              <a
+                href={WHATSAPP_ALAIDE_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`text-white/60 transition hover:text-pearl ${CTA_FOCUS}`}
+              >
+                Falar com a Alaíde
+              </a>
+              <Link href="/aluna/login" className={`text-white/60 transition hover:text-pearl ${CTA_FOCUS}`}>
+                Espaço da Aluna
+              </Link>
+            </nav>
+          </div>
+          <p className="mt-12 text-center text-[10px] uppercase tracking-[0.3em] text-white/30">Powered by GL PRO</p>
         </footer>
       </main>
 

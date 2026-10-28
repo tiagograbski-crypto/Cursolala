@@ -65,6 +65,13 @@ html[data-preloader="open"] body {
   background: #09090b;
 }
 
+/* Isolado na vitrine: overscroll chumbo. A aluna permanece pérola. */
+html.vitrine-native,
+html.vitrine-native body {
+  background-color: #09090b !important;
+  overscroll-behavior: none;
+}
+
 /* Ritual isolado: funil só depois do clique. Sem z-index no documento. */
 html[data-preloader="open"] [data-vitrine-shell] {
   visibility: hidden;
