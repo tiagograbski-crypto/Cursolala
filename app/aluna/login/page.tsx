@@ -45,7 +45,7 @@ export default function AlunaLoginPage() {
   }
 
   return (
-    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-zinc-950 px-6 py-8">
+    <main className="relative flex min-h-dvh items-center justify-center overflow-hidden bg-zinc-950 px-6 py-8 scheme-dark">
         <div className="pointer-events-none absolute left-1/2 top-[18%] h-[32rem] w-[32rem] -translate-x-1/2 rounded-full bg-white/[0.04] blur-3xl" />
         <section
           data-glass-surface=""

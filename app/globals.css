@@ -74,18 +74,32 @@ html[data-preloader="open"] [data-vitrine-shell] {
 
 @layer base {
   html {
-    background: #fdfbf7;
+    background: #09090b;
     scroll-padding-top: 5.5rem;
     scroll-padding-bottom: calc(7.5rem + env(safe-area-inset-bottom));
   }
 
   body {
     min-height: 100dvh;
-    background: #fdfbf7;
+    background: #09090b;
     color: #4a3b32;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
   }
 
   h1,

@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Outfit } from "next/font/google";
 import { Preloader } from "@/components/ui/Preloader";
+import { asset } from "@/lib/asset";
 import "./globals.css";
 
 const serif = Cormorant_Garamond({
@@ -18,21 +19,35 @@ const sans = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Alaíde Proença · GL PRO",
-  description: "Espaço de colorimetria Alaíde Proença na plataforma GL PRO.",
+  metadataBase: new URL("https://tiagograbski-crypto.github.io/Cursolala"),
+  title: {
+    default: "MASTERGLASS · Alaíde Proença",
+    template: "%s · MASTERGLASS",
+  },
+  description:
+    "Imersão presencial de colorimetria Masterglass com Alaíde Proença: previsibilidade absoluta no fundo de clareamento e no acervo digital vitalício.",
+  applicationName: "MASTERGLASS",
+  openGraph: {
+    title: "MASTERGLASS · Alaíde Proença",
+    description:
+      "A ciência exata para fundos de clareamento perfeitos. Imersão presencial ancorada pelo acervo digital Masterglass.",
+    locale: "pt_BR",
+    type: "website",
+  },
 };
 
 export const viewport: Viewport = {
-  themeColor: "#FDFBF7",
+  themeColor: "#09090b",
   width: "device-width",
   initialScale: 1,
+  viewportFit: "cover",
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="pt-BR">
       <head>
-        <link rel="preload" as="image" href="/images/alaide-ghost.jpg" />
+        <link rel="preload" as="image" href={asset("/images/alaide-ghost.jpg")} />
       </head>
       <body className={`${serif.variable} ${sans.variable} font-sans antialiased`}>
         <Preloader />

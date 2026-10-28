@@ -14,12 +14,18 @@ function allowedDevOrigins() {
   return [...origins];
 }
 
+const githubPages = process.env.GITHUB_PAGES === "1";
+const staticExport = process.env.FIREBASE_HOSTING === "1" || githubPages;
+
 const nextConfig: NextConfig = {
   allowedDevOrigins: allowedDevOrigins(),
   reactStrictMode: true,
   agentRules: false,
   devIndicators: false,
+  ...(staticExport ? { output: "export" as const, trailingSlash: false } : {}),
+  ...(githubPages ? { basePath: "/Cursolala", assetPrefix: "/Cursolala" } : {}),
   images: {
+    unoptimized: staticExport,
     remotePatterns: [
       {
         protocol: "https",

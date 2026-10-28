@@ -19,7 +19,7 @@ export function StudentLayout({
   return (
     <SessionGate role="aluna">
       <OswaldPreloader>
-      <div className="min-h-dvh bg-pearl">
+      <div className="min-h-dvh bg-pearl scheme-light">
         <div className="mx-auto flex min-h-dvh w-full max-w-[1920px]">
           <StudentSidebar tenantRecord={tenantRecord} />
 

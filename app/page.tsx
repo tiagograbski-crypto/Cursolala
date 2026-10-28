@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { HomeFounderStage } from "@/components/home/HomeFounderStage";
+import { SNAP_CARD, SnapRail } from "@/components/home/SnapRail";
 import {
   Award,
   BookOpen,
@@ -13,18 +14,18 @@ import {
   Star,
   X,
 } from "lucide-react";
+import { WHATSAPP_CONCIERGE_E164 } from "@/lib/tenant";
 
 /** Placeholder visual — troque `55SEUNUMERO` pelo DDI+DDD+número do Concierge. */
 const WHATSAPP_URL =
-  "https://wa.me/55SEUNUMERO?text=" +
+  `https://wa.me/${WHATSAPP_CONCIERGE_E164}?text=` +
   encodeURIComponent("Olá, gostaria de pleitear uma credencial Masterglass.");
 
 const SILVER_GLASS =
   "relative overflow-hidden bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(255,255,255,0.1)] text-white";
 
-const SNAP_RAIL =
-  "flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain hide-scrollbar px-5 pb-4 md:px-8";
-const SNAP_CARD = "w-[85vw] shrink-0 snap-center sm:w-[300px]";
+const CTA_FOCUS =
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pearl";
 
 const PASSPORT_DELIVERABLES = [
   {
@@ -137,29 +138,26 @@ function StarRow() {
   );
 }
 
-function CarouselDots({ count }: { count: number }) {
-  return (
-    <div className="mt-1 flex justify-center gap-2" aria-hidden>
-      {Array.from({ length: count }).map((_, index) => (
-        <span
-          key={index}
-          className={`h-2 w-2 rounded-full ${index === 0 ? "bg-white/50" : "bg-white/20"}`}
-        />
-      ))}
-    </div>
-  );
-}
-
 export default function MasterglassVitrinePage() {
   return (
-    <div className="min-h-dvh bg-zinc-950 text-pearl">
+    <div className="min-h-dvh bg-zinc-950 text-pearl scheme-dark selection:bg-white/20 selection:text-pearl">
+      <a
+        href="#vitrine-hero"
+        className={`sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-full focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:text-zinc-950 ${CTA_FOCUS}`}
+      >
+        Ir ao conteúdo
+      </a>
       <header
         className="fixed z-40 w-full border-b border-white/5 bg-zinc-950/60 backdrop-blur-md pt-[env(safe-area-inset-top)]"
       >
         <div className="mx-auto flex max-w-6xl items-center px-5 py-4 md:px-8">
-          <span className="whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.28em] text-pearl sm:text-xs sm:tracking-widest">
+          <Link
+            href="/"
+            className={`whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.28em] text-pearl sm:text-xs sm:tracking-widest ${CTA_FOCUS}`}
+            aria-label="MASTERGLASS — início"
+          >
             MASTERGLASS
-          </span>
+          </Link>
         </div>
       </header>
 
@@ -184,7 +182,7 @@ export default function MasterglassVitrinePage() {
                 aria-label="Status de admissão"
               >
                 <span className="relative flex size-2 shrink-0" aria-hidden>
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/60 opacity-75" />
+                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/60 opacity-75 motion-reduce:animate-none" />
                   <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
                 </span>
                 <span className="truncate">Próxima Imersão: 22/Nov • 8/10 Credenciais</span>
@@ -194,7 +192,7 @@ export default function MasterglassVitrinePage() {
                 href={WHATSAPP_URL}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-8 inline-flex min-h-11 w-full max-w-md items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-medium text-zinc-950 transition hover:bg-pearl sm:w-auto"
+                className={`mt-8 inline-flex min-h-12 w-full max-w-md items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-medium text-zinc-950 transition hover:bg-pearl sm:w-auto ${CTA_FOCUS}`}
               >
                 Pleitear uma Credencial
               </a>
@@ -213,19 +211,20 @@ export default function MasterglassVitrinePage() {
           <div className="mx-auto max-w-6xl px-5 md:px-8">
             <h2 className="font-serif text-xl font-medium text-pearl md:text-2xl">O Acervo Digital</h2>
           </div>
-          <ul className={`mt-8 ${SNAP_RAIL}`}>
-            {ACERVO.map(({ label, title, icon: Icon }) => (
-              <li
-                key={label}
-                className={`masterglass-silver-glass flex min-h-[11.5rem] flex-col gap-5 rounded-2xl p-6 text-pearl ${SNAP_CARD}`}
-              >
-                <span className="text-[10px] uppercase tracking-[0.28em] text-white/40">{label}</span>
-                <Icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
-                <p className="font-serif text-base leading-snug text-pearl/95 md:text-lg">{title}</p>
-              </li>
-            ))}
-          </ul>
-          <CarouselDots count={ACERVO.length} />
+          <div className="mt-8">
+            <SnapRail ariaLabel="Módulos do acervo digital" count={ACERVO.length}>
+              {ACERVO.map(({ label, title, icon: Icon }) => (
+                <li
+                  key={label}
+                  className={`masterglass-silver-glass flex min-h-[11.5rem] flex-col gap-5 rounded-2xl p-6 text-pearl ${SNAP_CARD}`}
+                >
+                  <span className="text-[10px] uppercase tracking-[0.28em] text-white/40">{label}</span>
+                  <Icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
+                  <p className="font-serif text-base leading-snug text-pearl/95 md:text-lg">{title}</p>
+                </li>
+              ))}
+            </SnapRail>
+          </div>
         </section>
 
         <section className="px-5 pb-16 md:px-8 md:pb-24">
@@ -261,55 +260,57 @@ export default function MasterglassVitrinePage() {
               Uma experiência hands-on. Não é sobre assistir, é sobre executar sob a supervisão do mestre.
             </p>
           </div>
-          <ul className={`mt-8 ${SNAP_RAIL}`}>
-            {IMMERSION_IMAGES.map(({ src, alt }) => (
-              <li
-                key={src}
-                className={`relative aspect-video overflow-hidden rounded-2xl border border-white/5 bg-zinc-900 ${SNAP_CARD}`}
-              >
-                <Image
-                  src={src}
-                  alt={alt}
-                  fill
-                  sizes="85vw"
-                  className="object-cover opacity-80"
-                />
-              </li>
-            ))}
-          </ul>
-          <CarouselDots count={IMMERSION_IMAGES.length} />
+          <div className="mt-8">
+            <SnapRail ariaLabel="Fotos da imersão presencial" count={IMMERSION_IMAGES.length}>
+              {IMMERSION_IMAGES.map(({ src, alt }) => (
+                <li
+                  key={src}
+                  className={`relative aspect-video overflow-hidden rounded-2xl border border-white/5 bg-zinc-900 ${SNAP_CARD}`}
+                >
+                  <Image
+                    src={src}
+                    alt={alt}
+                    fill
+                    sizes="(min-width: 768px) 33vw, 85vw"
+                    className="object-cover opacity-80"
+                  />
+                </li>
+              ))}
+            </SnapRail>
+          </div>
         </section>
 
         <section className="pb-16 md:pb-24">
           <div className="mx-auto max-w-6xl px-5 md:px-8">
             <h2 className="font-serif text-2xl font-medium text-pearl">O Padrão Masterglass</h2>
           </div>
-          <ul className={`mt-8 ${SNAP_RAIL}`}>
-            {TESTIMONIALS.map(({ quote, name, role }) => (
-              <li
-                key={name}
-                className={`masterglass-silver-glass flex min-h-[16rem] flex-col gap-6 rounded-2xl p-8 text-pearl ${SNAP_CARD}`}
-              >
-                <StarRow />
-                <blockquote className="font-serif text-base leading-relaxed text-white/85 md:text-lg">
-                  &ldquo;{quote}&rdquo;
-                </blockquote>
-                <footer className="mt-auto text-sm text-white/55">
-                  <span className="font-medium text-pearl/90">{name}</span>
-                  <span className="text-white/40"> · </span>
-                  {role}
-                </footer>
-              </li>
-            ))}
-          </ul>
-          <CarouselDots count={TESTIMONIALS.length} />
+          <div className="mt-8">
+            <SnapRail ariaLabel="Depoimentos de coloristas" count={TESTIMONIALS.length} columnsMd={2}>
+              {TESTIMONIALS.map(({ quote, name, role }) => (
+                <li
+                  key={name}
+                  className={`masterglass-silver-glass flex min-h-[16rem] flex-col gap-6 rounded-2xl p-8 text-pearl ${SNAP_CARD}`}
+                >
+                  <StarRow />
+                  <blockquote className="font-serif text-base leading-relaxed text-white/85 md:text-lg">
+                    &ldquo;{quote}&rdquo;
+                  </blockquote>
+                  <footer className="mt-auto text-sm text-white/55">
+                    <span className="font-medium text-pearl/90">{name}</span>
+                    <span className="text-white/40"> · </span>
+                    {role}
+                  </footer>
+                </li>
+              ))}
+            </SnapRail>
+          </div>
         </section>
 
         <section className="px-5 pb-16 md:px-8 md:pb-24">
           <div className="relative mx-auto max-w-6xl">
             <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-zinc-900">
               <Image
-                src="/alaide-proenca.jpg"
+                src="/images/alaide-bg.jpg"
                 alt="Alaíde Proença"
                 fill
                 sizes="100vw"
@@ -337,9 +338,9 @@ export default function MasterglassVitrinePage() {
               {FAQ_ITEMS.map(({ question, answer }) => (
                 <details key={question} className="group">
                   <summary
-                    className="flex min-h-[44px] cursor-pointer list-none items-center py-4 pr-2 font-medium text-pearl/95 transition hover:text-pearl [&::-webkit-details-marker]:hidden"
+                    className="flex min-h-[44px] cursor-pointer list-none items-start py-4 pr-2 text-left text-sm font-medium leading-snug text-pearl/95 transition hover:text-pearl md:text-base [&::-webkit-details-marker]:hidden"
                   >
-                    <span className="flex w-full items-center justify-between gap-4">
+                    <span className="flex w-full items-start justify-between gap-4">
                       {question}
                       <span
                         className="shrink-0 text-lg font-light text-white/35 transition group-open:rotate-45"
@@ -401,7 +402,10 @@ export default function MasterglassVitrinePage() {
         <footer className="border-t border-white/5 px-5 py-16 md:px-8">
           <p className="text-center text-[10px] uppercase tracking-[0.3em] text-white/30">Powered by GL PRO</p>
           <p className="mt-6 text-center">
-            <Link href="/aluna/login" className="text-[11px] tracking-wide text-white/35 transition hover:text-white/60">
+            <Link
+              href="/aluna/login"
+              className={`inline-flex min-h-11 items-center text-[11px] tracking-wide text-white/35 transition hover:text-white/60 ${CTA_FOCUS}`}
+            >
               Acesso de Alunas
             </Link>
           </p>
@@ -412,7 +416,8 @@ export default function MasterglassVitrinePage() {
         href={WHATSAPP_URL}
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-6 right-6 z-50 flex min-h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-zinc-950 transition hover:bg-pearl sm:left-auto sm:right-6 sm:w-auto sm:min-w-[16rem]"
+        className={`fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-6 right-6 z-50 flex min-h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-zinc-950 shadow-[0_16px_40px_rgba(0,0,0,0.45)] transition hover:bg-pearl sm:left-auto sm:right-6 sm:w-auto sm:min-w-[16rem] ${CTA_FOCUS}`}
+        aria-label="Falar com o Concierge no WhatsApp"
       >
         Falar com o Concierge
       </a>

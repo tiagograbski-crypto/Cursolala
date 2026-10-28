@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { cn } from "@/lib/cn";
@@ -68,6 +69,15 @@ export function Preloader() {
       return;
     }
 
+    const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    if (reduceMotion) {
+      setShowName(true);
+      setShowBrand(true);
+      setShowBrandStroke(true);
+      setShowCta(true);
+      return;
+    }
+
     if (ritualAnchorMs === null) ritualAnchorMs = Date.now();
 
     const apply = () => {
@@ -110,13 +120,23 @@ export function Preloader() {
     <>
       <div
         className={cn(
-          "preloader-root fixed inset-0 z-[100] flex min-h-[100dvh] max-h-[100dvh] flex-col bg-zinc-950/35 text-[#fdfbf7]",
+          "preloader-root fixed inset-0 z-[100] flex min-h-[100dvh] max-h-[100dvh] flex-col overflow-hidden bg-zinc-950 text-[#fdfbf7]",
           "pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)]",
           veilExit && "preloader-exit-veil",
         )}
         aria-busy={exitPhase === "idle" && !showCta}
         aria-label="Abertura Masterglass"
       >
+        <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
+          <Image
+            src="/images/alaide-ghost.jpg"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="scale-105 object-cover object-top opacity-30 grayscale mix-blend-overlay animate-pulse [animation-duration:8s] motion-reduce:animate-none"
+          />
+        </div>
         <div className="relative z-10 flex flex-1 flex-col px-4 pb-24 pt-[min(40vh,18.5rem)] sm:px-6 md:pt-[min(34vh,15.5rem)]">
           <div
             className={cn(
