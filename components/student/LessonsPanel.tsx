@@ -117,15 +117,9 @@ export function LessonsPanel() {
                 </div>
               ) : null}
 
-              {/* CTA */}
               <Button
-                variant="ghost"
-                className={[
-                  "mt-5 px-4 py-2.5 text-[12px]",
-                  isOswald
-                    ? "border-white/15 text-white/70 hover:bg-white/10 hover:text-white"
-                    : "",
-                ].join(" ")}
+                variant={isOswald ? "ghost" : "graphite"}
+                className="mt-5 px-4 py-2.5 text-[12px]"
                 onClick={() => openChapter(page.id)}
               >
                 Abrir protocolo no acervo
