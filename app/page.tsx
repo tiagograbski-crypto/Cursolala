@@ -2,11 +2,12 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useLayoutEffect, useState } from "react";
+import { useLayoutEffect } from "react";
 import { HandoffStickyCta } from "@/components/home/HandoffStickyCta";
 import { HomeFounderStage } from "@/components/home/HomeFounderStage";
 import { SnapRail } from "@/components/home/SnapRail";
 import { SNAP_CARD, SNAP_SLIDE } from "@/components/home/snapClasses";
+import { OswaldStar } from "@/components/student/apostila/OswaldStar";
 import {
   Award,
   BookOpen,
@@ -16,6 +17,7 @@ import {
   Fingerprint,
   FlaskConical,
   Lock,
+  Sigma,
   Sparkles,
   Star,
   X,
@@ -83,6 +85,13 @@ const ACERVO = [
     icon: BookOpen,
   },
   {
+    id: "02",
+    kicker: "Neutralização",
+    title: "Estrela de Oswald",
+    benefit: "Mata o reflexo com matemática. Sem chute na bancada.",
+    icon: Sigma,
+  },
+  {
     id: "03",
     kicker: "Oxidantes",
     title: "Química de Fixação",
@@ -144,101 +153,19 @@ const ADMISSION_STEPS = [
   "Recebimento do passaporte presencial e liberação do Acervo.",
 ] as const;
 
-/** Hexagrama 200²: laranja no vértice superior esquerdo, azul no oposto. */
-const OSWALD_UP = "100,20 169.28,140 30.72,140";
-const OSWALD_DOWN = "100,180 30.72,60 169.28,60";
-const OSWALD_ORANGE = { x: 30.72, y: 60 };
-const OSWALD_BLUE = { x: 169.28, y: 140 };
-
-function OswaldLab() {
-  const [isNeutralized, setIsNeutralized] = useState(false);
-
+function OswaldNeutralizationCard() {
   return (
-    <button
-      type="button"
-      onClick={() => setIsNeutralized(true)}
-      aria-pressed={isNeutralized}
-      aria-label={
-        isNeutralized
-          ? "Neutralização exata: laranja anulado pelo azul"
-          : "O pesadelo: fundo laranja. Toque para aplicar a matemática"
-      }
-      className={`relative flex aspect-square w-full cursor-pointer touch-manipulation select-none flex-col items-center justify-center overflow-hidden rounded-3xl border border-white/5 bg-zinc-950 transition-transform duration-200 active:scale-[0.98] md:aspect-video ${CTA_FOCUS}`}
-    >
-      <svg
-        viewBox="0 0 200 200"
-        className="h-[78%] w-[78%] max-h-[28rem] max-w-[28rem] transition-all duration-700 ease-in-out"
-        fill="none"
-        aria-hidden
-      >
-        <polygon
-          points={OSWALD_UP}
-          className={`transition-all duration-700 ease-in-out ${isNeutralized ? "stroke-white/35" : "stroke-white/20"}`}
-          strokeWidth="1.2"
-        />
-        <polygon
-          points={OSWALD_DOWN}
-          className={`transition-all duration-700 ease-in-out ${isNeutralized ? "stroke-white/35" : "stroke-white/20"}`}
-          strokeWidth="1.2"
-        />
-        <circle
-          cx={OSWALD_ORANGE.x}
-          cy={OSWALD_ORANGE.y}
-          r={isNeutralized ? 3.2 : 5.5}
-          className={`origin-center transition-all duration-700 ease-in-out ${
-            isNeutralized
-              ? "fill-orange-400/40"
-              : "fill-orange-400 animate-pulse shadow-orange-500/50 motion-reduce:animate-none"
-          }`}
-        />
-        <circle
-          cx={OSWALD_BLUE.x}
-          cy={OSWALD_BLUE.y}
-          r={isNeutralized ? 5.5 : 2.4}
-          className={`transition-all duration-700 ease-in-out ${
-            isNeutralized ? "fill-blue-400" : "fill-white/25"
-          }`}
-        />
-        <g className="mix-blend-screen">
-          <line
-            x1={OSWALD_ORANGE.x}
-            y1={OSWALD_ORANGE.y}
-            x2={OSWALD_BLUE.x}
-            y2={OSWALD_BLUE.y}
-            className={`stroke-blue-400 drop-shadow-[0_0_12px_rgba(96,165,250,0.8)] transition-all duration-700 ease-in-out ${
-              isNeutralized ? "opacity-100" : "opacity-0"
-            }`}
-            strokeWidth="2"
-            strokeLinecap="round"
-          />
-        </g>
-      </svg>
-
-      <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center px-8">
-        <p
-          className={`max-w-[14rem] text-center font-serif text-[15px] leading-snug text-pearl transition-all duration-700 ease-in-out md:text-lg ${
-            isNeutralized ? "translate-y-1 opacity-0" : "translate-y-0 opacity-100"
-          }`}
-        >
-          O Pesadelo: Fundo Laranja
-        </p>
-        <p
-          className={`absolute max-w-[16rem] text-center font-serif text-[15px] leading-snug text-pearl transition-all duration-700 ease-in-out md:text-lg ${
-            isNeutralized ? "translate-y-0 opacity-100" : "translate-y-1 opacity-0"
-          }`}
-        >
-          Neutralização Exata: Laranja anulado pelo Azul.
-        </p>
-      </div>
-
-      <span
-        className={`absolute top-6 left-1/2 w-[min(90%,20rem)] -translate-x-1/2 rounded-full border border-white/15 bg-white/5 px-4 py-2.5 text-center text-[10px] font-medium uppercase tracking-[0.16em] text-white/70 transition-all duration-700 ease-in-out ${
-          isNeutralized ? "pointer-events-none opacity-0" : "animate-pulse motion-reduce:animate-none"
-        }`}
-      >
-        Toque para Aplicar a Matemática
+    <article className="masterglass-silver-glass relative flex min-h-[300px] w-full min-w-0 flex-col overflow-hidden rounded-2xl p-5 text-pearl lg:h-full lg:p-6">
+      <span className="flex items-center gap-3">
+        <span className="font-serif text-3xl leading-none text-white/35">02</span>
+        <Sigma className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
       </span>
-    </button>
+      <p className="mt-3 text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">Neutralização</p>
+      <p className="mt-1 font-serif text-xl leading-snug text-pearl">Módulo II: Matemática da Neutralização</p>
+      <div className="mt-5 select-none">
+        <OswaldStar variant="glass" compact embedded />
+      </div>
+    </article>
   );
 }
 
@@ -351,32 +278,32 @@ export default function MasterglassVitrinePage() {
           <div className={SHELL}>
             <h2 className="font-serif text-xl font-medium text-pearl md:text-2xl">O Acervo Digital</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/55">
-              Do diagnóstico ao oxidante. No centro, a matemática que mata o reflexo.
+              Três protocolos da bancada. Do diagnóstico ao oxidante.
             </p>
-            <ul className="mt-6 flex flex-col gap-4 md:grid md:grid-cols-2 md:gap-5">
-              {ACERVO.map((item) => (
-                <li
-                  key={item.id}
-                  className="masterglass-silver-glass flex w-full min-w-0 flex-col gap-3 rounded-2xl p-5 text-pearl lg:gap-5 lg:p-6"
-                >
-                  <span className="flex items-center gap-3">
-                    <span className="font-serif text-3xl leading-none text-white/35">{item.id}</span>
-                    <item.icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
-                  </span>
-                  <div className="min-w-0">
-                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">{item.kicker}</p>
-                    <p className="mt-1 font-serif text-xl leading-snug text-pearl">{item.title}</p>
-                    <p className="mt-2 text-sm leading-relaxed text-white/60">{item.benefit}</p>
-                  </div>
-                </li>
-              ))}
+            <ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:grid lg:grid-cols-3 lg:gap-5">
+              {ACERVO.map((item) =>
+                item.id === "02" ? (
+                  <li key={item.id} className="min-w-0">
+                    <OswaldNeutralizationCard />
+                  </li>
+                ) : (
+                  <li
+                    key={item.id}
+                    className="masterglass-silver-glass flex w-full min-w-0 flex-col gap-3 rounded-2xl p-5 text-pearl lg:h-full lg:gap-5 lg:p-6"
+                  >
+                    <span className="flex items-center gap-3">
+                      <span className="font-serif text-3xl leading-none text-white/35">{item.id}</span>
+                      <item.icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
+                    </span>
+                    <div className="min-w-0">
+                      <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">{item.kicker}</p>
+                      <p className="mt-1 font-serif text-xl leading-snug text-pearl">{item.title}</p>
+                      <p className="mt-2 text-sm leading-relaxed text-white/60">{item.benefit}</p>
+                    </div>
+                  </li>
+                ),
+              )}
             </ul>
-            <p className="mt-10 text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
-              Laboratório · Estrela de Oswald
-            </p>
-            <div className="mt-4">
-              <OswaldLab />
-            </div>
           </div>
         </section>
 
