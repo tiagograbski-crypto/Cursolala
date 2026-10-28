@@ -29,6 +29,10 @@ const SILVER_GLASS =
 const CTA_FOCUS =
   "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pearl";
 
+const SHELL = "mx-auto w-full max-w-[1440px]";
+const SECTION_X = "px-5 md:px-8 lg:px-12";
+const SECTION_Y = "pb-[clamp(4rem,8vw,8rem)]";
+
 const PASSPORT_DELIVERABLES = [
   {
     icon: Clock,
@@ -158,7 +162,7 @@ export default function MasterglassVitrinePage() {
       <header
         className="fixed top-0 z-50 w-full border-b border-white/5 bg-zinc-950/50 backdrop-blur-md pt-[env(safe-area-inset-top)]"
       >
-        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6 md:px-12">
+        <div className={`${SHELL} flex items-center justify-between gap-3 px-4 py-4 sm:px-6 lg:px-12`}>
           <Link
             href="/"
             className={`min-w-0 ${CTA_FOCUS}`}
@@ -183,77 +187,78 @@ export default function MasterglassVitrinePage() {
       </header>
 
       <main className="relative z-0 w-full pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
-        <section id="vitrine-hero" className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-zinc-950">
+        <section id="vitrine-hero" className="relative isolate min-h-[100dvh] overflow-hidden bg-zinc-950">
           <HomeFounderStage />
-          <div
-            className="relative z-10 mx-auto mt-auto w-full max-w-6xl px-5 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-[calc(5.5rem+env(safe-area-inset-top))] md:px-8 md:pb-24"
-          >
-            <div className="w-full max-w-xl">
-              <p className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
-                <Dna className="size-3 shrink-0 text-pearl" strokeWidth={1.75} aria-hidden />
-                <span className="text-[9px] font-medium uppercase leading-snug tracking-widest text-white/80">
-                  Módulo especialista: Colorimetria & Tricologia
-                </span>
-              </p>
-              <h1 className="mb-4 font-serif text-3xl font-medium leading-[1.12] text-pearl md:text-5xl">
-                Previsibilidade Absoluta. O Fim do Achismo na Sua Bancada.
-              </h1>
-              <p className="text-sm leading-relaxed text-white/70 md:text-base">
-                Este é o módulo de Colorimetria: a ciência exata para fundos de clareamento perfeitos e neutralizações
-                impecáveis. Presencial, com o acervo digital na bancada.
-              </p>
+          <div className="relative z-10 grid min-h-[100dvh] grid-cols-1 lg:grid-cols-2">
+            <div className="flex flex-col justify-end px-5 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-[calc(5.5rem+env(safe-area-inset-top))] md:px-8 md:pb-24 lg:justify-center lg:pb-24 lg:pl-[max(3rem,calc((100vw-1440px)/2+3rem))] lg:pr-10">
+              <div className="w-full max-w-xl">
+                <p className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
+                  <Dna className="size-3 shrink-0 text-pearl" strokeWidth={1.75} aria-hidden />
+                  <span className="text-[9px] font-medium uppercase leading-snug tracking-widest text-white/80">
+                    Módulo especialista: Colorimetria & Tricologia
+                  </span>
+                </p>
+                <h1 className="mb-4 font-serif text-[clamp(2.5rem,5vw,5rem)] font-medium leading-[1.08] text-pearl">
+                  Previsibilidade Absoluta. O Fim do Achismo na Sua Bancada.
+                </h1>
+                <p className="text-sm leading-relaxed text-white/70 md:text-base">
+                  Este é o módulo de Colorimetria: a ciência exata para fundos de clareamento perfeitos e
+                  neutralizações impecáveis. Presencial, com o acervo digital na bancada.
+                </p>
 
-              <div
-                className="masterglass-silver-glass mt-8 inline-flex max-w-full items-center gap-2 rounded-full px-4 py-2.5 text-[11px] leading-none text-white/75"
-                role="status"
-                aria-label="Status de admissão"
-              >
-                <span className="relative flex size-2 shrink-0" aria-hidden>
-                  <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/60 opacity-75 motion-reduce:animate-none" />
-                  <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
-                </span>
-                <span className="truncate">Módulo Colorimetria: 22/Nov • 8/10 vagas</span>
+                <div
+                  className="masterglass-silver-glass mt-8 inline-flex max-w-full items-center gap-2 rounded-full px-4 py-2.5 text-[11px] leading-none text-white/75"
+                  role="status"
+                  aria-label="Status de admissão"
+                >
+                  <span className="relative flex size-2 shrink-0" aria-hidden>
+                    <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/60 opacity-75 motion-reduce:animate-none" />
+                    <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
+                  </span>
+                  <span className="truncate">Módulo Colorimetria: 22/Nov • 8/10 vagas</span>
+                </div>
+
+                <a
+                  href={WHATSAPP_VAGA_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`mt-8 inline-flex min-h-12 w-full max-w-md items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-medium text-zinc-950 transition hover:bg-pearl sm:w-auto ${CTA_FOCUS}`}
+                >
+                  Garantir minha vaga
+                </a>
               </div>
-
-              <a
-                href={WHATSAPP_VAGA_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className={`mt-8 inline-flex min-h-12 w-full max-w-md items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-medium text-zinc-950 transition hover:bg-pearl sm:w-auto ${CTA_FOCUS}`}
-              >
-                Garantir minha vaga
-              </a>
             </div>
+            <div className="hidden min-h-0 lg:block" aria-hidden />
           </div>
         </section>
 
-        <section className="px-5 py-8 md:px-8 md:py-10">
-          <p className="mx-auto max-w-3xl text-center font-serif text-lg leading-relaxed text-white/80 md:text-2xl">
+        <section className={`${SECTION_X} py-[clamp(2.5rem,5vw,5rem)]`}>
+          <p className="mx-auto max-w-3xl text-center font-serif text-[clamp(1.15rem,2.4vw,1.75rem)] leading-relaxed text-white/80">
             Você não precisa de mais &apos;receitinhas&apos;. Você precisa de matemática química. O método Masterglass é
             a diferença entre contar com a sorte e comandar a química sem medo do lavatório.
           </p>
         </section>
 
-        <section className="px-5 pb-16 md:px-8 md:pb-24">
-          <div className="mx-auto max-w-6xl">
+        <section className={`${SECTION_X} ${SECTION_Y}`}>
+          <div className={SHELL}>
             <h2 className="font-serif text-xl font-medium text-pearl md:text-2xl">O Acervo Digital</h2>
             <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/55">
               Três protocolos da bancada. Do diagnóstico ao oxidante.
             </p>
-            <ul className="mt-6 space-y-3 md:mt-8 md:grid md:grid-cols-3 md:gap-5 md:space-y-0">
+            <ul className="mt-6 flex flex-col gap-4 lg:mt-8 lg:grid lg:grid-cols-3 lg:gap-5">
               {ACERVO.map(({ id, kicker, title, benefit, icon: Icon }) => (
                 <li
                   key={id}
-                  className="masterglass-silver-glass flex items-start gap-4 rounded-2xl px-5 py-4 text-pearl md:h-full md:flex-col md:gap-5 md:p-6"
+                  className="masterglass-silver-glass flex w-full min-w-0 flex-col gap-3 rounded-2xl p-5 text-pearl lg:h-full lg:gap-5 lg:p-6"
                 >
-                  <span className="flex shrink-0 items-center gap-3">
-                    <span className="font-serif text-2xl leading-none text-white/35">{id}</span>
-                    <Icon className="hidden size-5 text-white/45 md:block" strokeWidth={1.5} aria-hidden />
+                  <span className="flex items-center gap-3">
+                    <span className="font-serif text-3xl leading-none text-white/35">{id}</span>
+                    <Icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
                   </span>
                   <div className="min-w-0">
                     <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">{kicker}</p>
-                    <p className="mt-1 font-serif text-lg leading-snug text-pearl md:text-xl">{title}</p>
-                    <p className="mt-1.5 text-sm leading-5 text-white/60">{benefit}</p>
+                    <p className="mt-1 font-serif text-xl leading-snug text-pearl">{title}</p>
+                    <p className="mt-2 text-sm leading-relaxed text-white/60">{benefit}</p>
                   </div>
                 </li>
               ))}
@@ -261,8 +266,8 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="px-5 pb-16 md:px-8 md:pb-24">
-          <div className="mx-auto max-w-4xl">
+        <section className={`${SECTION_X} ${SECTION_Y}`}>
+          <div className={SHELL}>
             <div className={`${SILVER_GLASS} rounded-3xl p-8 text-pearl md:p-12`}>
               <h2 className="mb-8 text-center font-serif text-3xl font-medium text-pearl">
                 O Seu Passaporte Presencial
@@ -287,8 +292,8 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="pb-16 md:pb-24">
-          <div className="mx-auto max-w-6xl px-5 md:px-8">
+        <section className={SECTION_Y}>
+          <div className={`${SHELL} ${SECTION_X}`}>
             <h2 className="font-serif text-2xl font-medium text-pearl md:text-3xl">O Módulo de Colorimetria</h2>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">
               Não é aula assistida. É Colorimetria na bancada, sob a supervisão da Alaíde.
@@ -314,8 +319,8 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="pb-16 md:pb-24">
-          <div className="mx-auto max-w-6xl px-5 md:px-8">
+        <section className={SECTION_Y}>
+          <div className={`${SHELL} ${SECTION_X}`}>
             <h2 className="font-serif text-2xl font-medium text-pearl">O Padrão Masterglass</h2>
           </div>
           <div className="mt-8">
@@ -340,21 +345,23 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="px-5 pb-16 md:px-8 md:pb-24">
-          <div className="relative mx-auto max-w-6xl">
-            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-zinc-900 sm:aspect-[4/5] md:aspect-video">
+        <section className={`${SECTION_X} ${SECTION_Y}`}>
+          <div className={`${SHELL} grid grid-cols-1 items-center gap-6 lg:grid-cols-2 lg:gap-12`}>
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-zinc-900">
               <Image
                 src={asset("/images/alaide-bg.jpg")}
                 alt="Alaíde Proença"
                 fill
                 unoptimized
-                sizes="100vw"
-                className="object-cover object-[center_12%] md:object-[center_18%]"
+                sizes="(min-width: 1024px) 50vw, 100vw"
+                className="object-cover object-[center_12%]"
               />
             </div>
-            <div className="masterglass-silver-glass relative z-10 mt-4 rounded-2xl p-6 text-pearl md:mx-8 md:-mt-12 md:p-8">
-              <h2 className="font-serif text-3xl font-medium text-pearl md:text-4xl">Alaíde Proença</h2>
-              <ul className="mt-5 space-y-3">
+            <div className="masterglass-silver-glass rounded-2xl p-6 text-pearl lg:p-10">
+              <h2 className="font-serif text-[clamp(2rem,4vw,3.5rem)] font-medium leading-none text-pearl">
+                Alaíde Proença
+              </h2>
+              <ul className="mt-6 space-y-3">
                 {MENTOR_POINTS.map((point) => (
                   <li key={point} className="flex items-start gap-3 text-sm text-white/75 md:text-base">
                     <Sparkles className="mt-0.5 size-4 shrink-0 text-white/40" strokeWidth={1.5} aria-hidden />
@@ -366,7 +373,7 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="px-5 pb-16 md:px-8 md:pb-24">
+        <section className={`${SECTION_X} ${SECTION_Y}`}>
           <div className="mx-auto max-w-2xl">
             <h2 className="font-serif text-2xl font-medium text-pearl">Dúvidas Frequentes</h2>
             <div className="mt-8 divide-y divide-white/10 border-y border-white/10">
@@ -392,8 +399,8 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="px-5 pb-16 md:px-8 md:pb-24">
-          <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+        <section className={`${SECTION_X} ${SECTION_Y}`}>
+          <div className={`${SHELL} grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8`}>
             <article className={`${SILVER_GLASS} rounded-3xl p-8 text-pearl md:p-12`}>
               <Check className="size-6 text-emerald-400" strokeWidth={1.75} aria-hidden />
               <h2 className="mt-5 font-serif text-2xl font-medium text-pearl">Para Quem É</h2>
@@ -415,7 +422,7 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <section className="px-5 pb-16 md:px-8 md:pb-24">
+        <section className={`${SECTION_X} ${SECTION_Y}`}>
           <div className="mx-auto max-w-2xl">
             <h2 className="font-serif text-2xl font-medium text-pearl md:text-3xl">Como garantir sua vaga</h2>
             <ol className="mt-10 space-y-8 border-l border-white/20 pl-6">
@@ -434,7 +441,7 @@ export default function MasterglassVitrinePage() {
           </div>
         </section>
 
-        <footer className="border-t border-white/5 px-5 py-16 md:px-8">
+        <footer className={`border-t border-white/5 ${SECTION_X} py-[clamp(3rem,6vw,5rem)]`}>
           <p className="text-center text-[10px] uppercase tracking-[0.3em] text-white/30">Powered by GL PRO</p>
           <p className="mt-6 text-center">
             <Link

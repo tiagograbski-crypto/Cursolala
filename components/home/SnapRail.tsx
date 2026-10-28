@@ -60,7 +60,7 @@ export function SnapRail({ ariaLabel, children, count, columnsMd = 3 }: SnapRail
         className={cn(
           "flex snap-x snap-mandatory gap-4 overflow-x-auto overscroll-x-contain hide-scrollbar px-5 pb-4",
           "focus-visible:outline-none",
-          "md:mx-auto md:grid md:max-w-6xl md:snap-none md:gap-5 md:overflow-visible md:px-8 md:pb-0",
+          "md:mx-auto md:grid md:w-full md:max-w-[1440px] md:snap-none md:gap-5 md:overflow-visible md:px-8 md:pb-0 lg:px-12",
           columnsMd === 2 ? "md:grid-cols-2" : "md:grid-cols-3",
         )}
       >
@@ -86,4 +86,4 @@ export function SnapRail({ ariaLabel, children, count, columnsMd = 3 }: SnapRail
 }
 
 export const SNAP_CARD =
-  "w-[85vw] shrink-0 snap-center sm:w-[300px] md:w-full md:max-w-none md:shrink md:snap-align-none";
+  "w-[85vw] min-w-[85vw] shrink-0 snap-center sm:w-[300px] sm:min-w-[300px] md:w-full md:min-w-0 md:max-w-none md:shrink md:snap-align-none";
