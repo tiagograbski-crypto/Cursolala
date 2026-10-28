@@ -74,14 +74,14 @@ html[data-preloader="open"] [data-vitrine-shell] {
 
 @layer base {
   html {
-    background: #09090b;
+    background: #fdfbf7;
     scroll-padding-top: 5.5rem;
     scroll-padding-bottom: calc(7.5rem + env(safe-area-inset-bottom));
   }
 
   body {
     min-height: 100dvh;
-    background: #09090b;
+    background: #fdfbf7;
     color: #4a3b32;
     font-family: var(--font-sans);
     -webkit-font-smoothing: antialiased;

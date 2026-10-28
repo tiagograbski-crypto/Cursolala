@@ -23,14 +23,14 @@ export function OswaldPreloader({ children }: { children: ReactNode }) {
 
   return (
     <div
-      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-zinc-950"
+      className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-pearl"
       role="status"
       aria-live="polite"
       aria-busy="true"
     >
       <svg
         viewBox="0 0 100 100"
-        className="h-28 w-28 animate-oswald-beat text-white/70"
+        className="h-28 w-28 animate-oswald-beat text-sage"
         fill="transparent"
         stroke="currentColor"
         strokeWidth="1.5"
@@ -39,7 +39,7 @@ export function OswaldPreloader({ children }: { children: ReactNode }) {
         <polygon points={TRIANGLE_UP} />
         <polygon points={TRIANGLE_DOWN} />
       </svg>
-      <p className="mt-8 font-serif tracking-[0.4em] text-[10px] text-white/50">Autenticando Licença...</p>
+      <p className="mt-8 font-serif text-[10px] tracking-[0.4em] text-ink/45">Autenticando Licença...</p>
     </div>
   );
 }

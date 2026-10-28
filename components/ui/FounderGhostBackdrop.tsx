@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { asset } from "@/lib/asset";
 
 /** Foto da fundadora no hero — luz no rosto, máscara só no topo (logo) e na copy. */
 export const FOUNDER_GHOST_SRC = "/images/alaide-ghost.jpg";
@@ -7,10 +8,11 @@ export function FounderGhostBackdrop({ className }: { className?: string }) {
   return (
     <div className={className ?? "pointer-events-none absolute inset-0 min-h-[100dvh] w-full"} aria-hidden>
       <Image
-        src={FOUNDER_GHOST_SRC}
+        src={asset(FOUNDER_GHOST_SRC)}
         alt=""
         fill
         priority
+        unoptimized
         sizes="100vw"
         className="object-cover object-top opacity-50 grayscale md:opacity-30"
       />

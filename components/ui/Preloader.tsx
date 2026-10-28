@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import { asset } from "@/lib/asset";
 import { cn } from "@/lib/cn";
 
 const BRAND_LETTERS = "MASTERGLASS".split("");
@@ -129,10 +130,11 @@ export function Preloader() {
       >
         <div className="pointer-events-none absolute inset-0 z-0 overflow-hidden" aria-hidden>
           <Image
-            src="/images/alaide-ghost.jpg"
+            src={asset("/images/alaide-ghost.jpg")}
             alt=""
             fill
             priority
+            unoptimized
             sizes="100vw"
             className="scale-105 object-cover object-top opacity-30 grayscale mix-blend-overlay animate-pulse [animation-duration:8s] motion-reduce:animate-none"
           />

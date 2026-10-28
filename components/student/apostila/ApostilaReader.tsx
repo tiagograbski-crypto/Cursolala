@@ -34,10 +34,9 @@ function ChapterSidebar({
   return (
     <nav
       aria-label="Capítulos da apostila"
-      className="sticky top-6 hidden w-56 shrink-0 self-start rounded-[28px] border border-white/10 bg-zinc-950/80 p-4 text-pearl shadow-2xl backdrop-blur-3xl lg:block xl:w-64"
-      data-glass-surface=""
+      className="sticky top-6 hidden w-56 shrink-0 self-start rounded-[28px] bg-pearl p-4 text-ink shadow-card lg:block xl:w-64"
     >
-      <p className="px-4 text-[10px] uppercase tracking-[0.22em] text-pearl-muted">Conteúdo</p>
+      <p className="px-4 text-[10px] uppercase tracking-[0.22em] text-ink/40">Conteúdo</p>
       <ul className="mt-4 space-y-1.5">
         {chapters.map((chapter) => {
           const isActive = chapter.id === activeChapter?.id;
@@ -48,13 +47,13 @@ function ChapterSidebar({
                 onClick={() => onJump(chapter.startPage)}
                 className={cn(
                   "group w-full rounded-2xl px-4 py-3 text-left transition-all duration-200",
-                  isActive ? "bg-white/10" : "hover:bg-white/5",
+                  isActive ? "bg-pearl-deep shadow-card" : "hover:bg-pearl-deep/70",
                 )}
               >
                 <p
                   className={cn(
                     "text-[10px] uppercase tracking-[0.16em]",
-                    isActive ? "text-pearl" : "text-pearl-muted group-hover:text-pearl",
+                    isActive ? "text-sage" : "text-ink/40 group-hover:text-ink",
                   )}
                 >
                   Capítulo {chapter.chapterNumber} · Pág {chapter.startPage}–{chapter.endPage}
@@ -62,13 +61,13 @@ function ChapterSidebar({
                 <p
                   className={cn(
                     "mt-0.5 font-serif text-[1rem] leading-snug",
-                    isActive ? "text-pearl" : "text-pearl-muted group-hover:text-pearl",
+                    isActive ? "text-ink" : "text-ink/55 group-hover:text-ink",
                   )}
                 >
                   {chapter.title}
                 </p>
                 {isActive && (
-                  <p className="mt-1 text-[10px] leading-4 text-pearl-muted">{chapter.subtitle}</p>
+                  <p className="mt-1 text-[10px] leading-4 text-ink/40">{chapter.subtitle}</p>
                 )}
               </button>
             </li>
@@ -77,13 +76,13 @@ function ChapterSidebar({
       </ul>
 
       <div className="mt-6 px-4">
-        <div className="flex justify-between text-[10px] text-pearl-muted">
+        <div className="flex justify-between text-[10px] text-ink/40">
           <span>Progresso</span>
           <span>{currentPage}/{TOTAL_PAGES}</span>
         </div>
-        <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/10">
+        <div className="mt-2 h-1 overflow-hidden rounded-full bg-ink/10">
           <div
-            className="h-full rounded-full bg-pearl transition-all duration-500"
+            className="h-full rounded-full bg-sage transition-all duration-500"
             style={{ width: `${Math.round((currentPage / TOTAL_PAGES) * 100)}%` }}
           />
         </div>
@@ -108,18 +107,17 @@ function PageNavigation({
   return (
     <div className="sticky bottom-[calc(7.5rem+env(safe-area-inset-bottom))] z-30 mt-auto pt-6 lg:bottom-6">
       <div
-        className="flex items-center justify-between gap-2 rounded-[28px] border border-white/10 bg-zinc-950/80 px-3 py-3 text-pearl shadow-2xl backdrop-blur-3xl sm:gap-3 sm:px-4"
-        data-glass-surface=""
+        className="flex items-center justify-between gap-2 rounded-[28px] bg-pearl px-3 py-3 text-ink shadow-card sm:gap-3 sm:px-4"
       >
         <button
           type="button"
           onClick={onPrev}
           disabled={!hasPrev}
           className={cn(
-            "inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-[12px] transition-all sm:px-5",
+            "inline-flex items-center gap-2 rounded-full border border-ink/10 px-4 py-2.5 text-[12px] transition-all sm:px-5",
             hasPrev
-              ? "text-pearl hover:bg-white/10 active:scale-95"
-              : "cursor-not-allowed text-pearl-muted",
+              ? "text-ink hover:bg-pearl-deep active:scale-95"
+              : "cursor-not-allowed text-ink/35",
           )}
           aria-label="Página anterior"
         >
@@ -131,12 +129,12 @@ function PageNavigation({
         </button>
 
         <div className="text-center">
-          <p className="text-[11px] uppercase tracking-[0.16em] text-pearl-muted">
+          <p className="text-[11px] uppercase tracking-[0.16em] text-ink/40">
             {chapter ? `Cap. ${chapter.chapterNumber}` : ""}
           </p>
-          <p className="font-serif text-lg leading-none text-pearl">
+          <p className="font-serif text-lg leading-none text-ink">
             {String(currentPage).padStart(2, "0")}
-            <span className="text-pearl-muted">/{TOTAL_PAGES}</span>
+            <span className="text-ink/35">/{TOTAL_PAGES}</span>
           </p>
         </div>
 
@@ -145,10 +143,10 @@ function PageNavigation({
           onClick={onNext}
           disabled={!hasNext}
           className={cn(
-            "inline-flex items-center gap-2 rounded-full border border-white/10 px-4 py-2.5 text-[12px] transition-all sm:px-5",
+            "inline-flex items-center gap-2 rounded-full border border-ink/10 px-4 py-2.5 text-[12px] transition-all sm:px-5",
             hasNext
-              ? "text-pearl hover:bg-white/10 active:scale-95"
-              : "cursor-not-allowed text-pearl-muted",
+              ? "text-ink hover:bg-pearl-deep active:scale-95"
+              : "cursor-not-allowed text-ink/35",
           )}
           aria-label="Próxima página"
         >
@@ -212,7 +210,7 @@ export function ApostilaReader({ portrait: _portrait }: { portrait: string }) {
         <button
           type="button"
           onClick={() => setDrawerOpen(true)}
-          className="flex items-center gap-2 rounded-full border border-white/10 bg-zinc-950/80 px-4 py-2.5 text-[12px] text-pearl shadow-2xl backdrop-blur-3xl lg:hidden"
+          className="flex items-center gap-2 rounded-full bg-pearl px-4 py-2.5 text-[12px] text-ink shadow-card lg:hidden"
           aria-label="Abrir índice de capítulos"
         >
           <Menu strokeWidth={1.5} className="h-4 w-4" />
@@ -223,7 +221,7 @@ export function ApostilaReader({ portrait: _portrait }: { portrait: string }) {
       <div className="flex items-start gap-6">
         <ChapterSidebar currentPage={currentPage} onJump={goTo} />
 
-        <div className="flex min-h-[calc(100dvh-11rem)] min-w-0 flex-1 flex-col lg:min-h-[calc(100dvh-8.5rem)]">
+        <div className="flex min-w-0 flex-1 flex-col lg:min-h-[calc(100dvh-8.5rem)]">
           <AnimatePresence mode="wait">
             <motion.div
               key={currentPage}

@@ -9,11 +9,13 @@ import {
   Clock,
   Fingerprint,
   FlaskConical,
+  Lock,
   Sigma,
   Sparkles,
   Star,
   X,
 } from "lucide-react";
+import { asset } from "@/lib/asset";
 import { WHATSAPP_CONCIERGE_E164 } from "@/lib/tenant";
 
 /** Placeholder visual — troque `55SEUNUMERO` pelo DDI+DDD+número do Concierge. */
@@ -148,15 +150,22 @@ export default function MasterglassVitrinePage() {
         Ir ao conteúdo
       </a>
       <header
-        className="fixed z-40 w-full border-b border-white/5 bg-zinc-950/60 backdrop-blur-md pt-[env(safe-area-inset-top)]"
+        className="fixed top-0 z-50 w-full border-b border-white/5 bg-zinc-950/50 backdrop-blur-md pt-[env(safe-area-inset-top)]"
       >
-        <div className="mx-auto flex max-w-6xl items-center px-5 py-4 md:px-8">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6 md:px-12">
           <Link
             href="/"
-            className={`whitespace-nowrap text-[11px] font-medium uppercase tracking-[0.28em] text-pearl sm:text-xs sm:tracking-widest ${CTA_FOCUS}`}
+            className={`min-w-0 text-xs tracking-[0.22em] text-white/90 whitespace-nowrap sm:tracking-[0.3em] ${CTA_FOCUS}`}
             aria-label="MASTERGLASS — início"
           >
             MASTERGLASS
+          </Link>
+          <Link
+            href="/aluna/login"
+            className={`flex min-h-[32px] shrink-0 items-center gap-1.5 rounded-full border border-white/10 bg-white/5 px-2.5 py-1.5 text-white/50 backdrop-blur-md transition-all duration-300 hover:bg-white/10 hover:text-white sm:px-3 ${CTA_FOCUS}`}
+          >
+            <Lock size={12} strokeWidth={1.75} aria-hidden />
+            <span className="text-[10px] font-medium tracking-wide">Espaço da Aluna</span>
           </Link>
         </div>
       </header>
@@ -310,9 +319,10 @@ export default function MasterglassVitrinePage() {
           <div className="relative mx-auto max-w-6xl">
             <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-zinc-900">
               <Image
-                src="/images/alaide-bg.jpg"
+                src={asset("/images/alaide-bg.jpg")}
                 alt="Alaíde Proença"
                 fill
+                unoptimized
                 sizes="100vw"
                 className="object-cover object-top"
               />
