@@ -1,5 +1,5 @@
-:HL["/Cursolala/_next/static/chunks/0bwkwk2zs4opq.css","style"]
+:HL["/Cursolala/_next/static/chunks/32el1n23_lx7l.css","style"]
 :HL["/Cursolala/images/alaide-ghost.jpg","image"]
 2:[["children",{"s":"__PAGE__","h":160}]]
 1:[["children",{"s":"/_not-found","h":96,"c":"$Q2"}]]
-0:{"b":"7EwryLovplyUSIj8Tryyk","t":{"t":{"s":"","h":84,"c":"$Q1"}}}
+0:{"b":"5rG-z0Hxz785gOpOL-ujK","t":{"t":{"s":"","h":84,"c":"$Q1"}}}

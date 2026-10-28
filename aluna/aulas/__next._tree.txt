@@ -1,8 +1,8 @@
-:HL["/Cursolala/_next/static/chunks/0bwkwk2zs4opq.css","style"]
+:HL["/Cursolala/_next/static/chunks/32el1n23_lx7l.css","style"]
 :HL["/Cursolala/_next/static/media/6f3ab718e3727c1a-s.p.3huc2loe0ie8a.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/Cursolala/_next/static/media/c0680f1bdb3a2e90-s.p.1gsd1jahc5dg_.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
 :HL["/Cursolala/images/alaide-ghost.jpg","image"]
 3:[["children",{"s":"__PAGE__","h":160}]]
 2:[["children",{"s":"aulas","h":96,"c":"$Q3"}]]
 1:[["children",{"s":"aluna","h":96,"c":"$Q2"}]]
-0:{"b":"7EwryLovplyUSIj8Tryyk","t":{"t":{"s":"","h":84,"c":"$Q1"}}}
+0:{"b":"5rG-z0Hxz785gOpOL-ujK","t":{"t":{"s":"","h":84,"c":"$Q1"}}}
