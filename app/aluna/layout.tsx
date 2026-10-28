@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
-import { StudentLayout } from "@/components/layouts/StudentLayout";
+import { AlunaShell } from "@/components/layouts/AlunaShell";
+import { getMvpTenant } from "@/lib/tenant";
 
 export default function Layout({ children }: { children: ReactNode }) {
-  return <StudentLayout>{children}</StudentLayout>;
+  return <AlunaShell tenantRecord={getMvpTenant()}>{children}</AlunaShell>;
 }

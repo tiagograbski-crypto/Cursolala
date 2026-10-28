@@ -1,5 +1,6 @@
-import { LicenseDesk } from "@/components/producer/LicenseDesk";
+import { ProducerDashboard } from "@/components/producer/ProducerDashboard";
+import { getMvpTenant } from "@/lib/tenant";
 
 export default function ProdutoraPage() {
-  return <LicenseDesk />;
+  return <ProducerDashboard tenantRecord={getMvpTenant()} />;
 }

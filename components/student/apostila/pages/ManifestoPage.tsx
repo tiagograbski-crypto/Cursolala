@@ -3,7 +3,7 @@
 import { WatchLessonButton } from "@/components/student/apostila/WatchLessonButton";
 import { ProducerPortrait } from "@/components/ui/ProducerPortrait";
 
-export function ManifestoPage({ onWatch }: { onWatch: () => void }) {
+export function ManifestoPage({ onWatch, portrait }: { onWatch: () => void; portrait: string }) {
   return (
     <article>
       <p className="text-[10px] font-medium uppercase tracking-[0.22em] text-sage">P0 · Abertura</p>
@@ -31,7 +31,7 @@ export function ManifestoPage({ onWatch }: { onWatch: () => void }) {
       </blockquote>
       <footer className="mt-10 flex items-center gap-3">
         <span className="block h-11 w-11 overflow-hidden rounded-full shadow-card">
-          <ProducerPortrait />
+          <ProducerPortrait portrait={portrait} />
         </span>
         <span>
           <span className="block font-serif text-lg leading-none">Alaíde Proença</span>

@@ -12,7 +12,7 @@ export function SessionGate({ role, children }: { role: Role; children: ReactNod
   useEffect(() => {
     const session = readSession();
     if (!session) {
-      router.replace("/");
+      router.replace("/aluna/login");
       return;
     }
     if (session.role !== role) {

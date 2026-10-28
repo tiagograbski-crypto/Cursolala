@@ -1,5 +1,6 @@
 import { InfraReport } from "@/components/producer/InfraReport";
+import { getMvpTenant } from "@/lib/tenant";
 
 export default function AcertoPage() {
-  return <InfraReport />;
+  return <InfraReport tenantRecord={getMvpTenant()} />;
 }
