@@ -38,14 +38,15 @@ function whatsAppShareUrl(message: string) {
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(message)}`;
 }
 
-/** Concierge — só dígitos (DDI 55 + DDD + número). Edite aqui. */
-export const WHATSAPP_CONCIERGE_E164 = "55SEUNUMERO";
+/** Alaíde — DDI 55 + 47 9691-2277. */
+export const WHATSAPP_ALAIDE_E164 = "554796912277";
 
-export function conciergeWhatsAppUrl() {
-  const text = encodeURIComponent(
-    "Olá, gostaria de pleitear uma credencial para a imersão Masterglass.",
-  );
-  return `https://wa.me/${WHATSAPP_CONCIERGE_E164}?text=${text}`;
+export function alaideWhatsAppUrl(intent: "vaga" | "fala" = "vaga") {
+  const text =
+    intent === "fala"
+      ? "Olá Alaíde, quero falar sobre a imersão Masterglass."
+      : "Olá Alaíde, quero garantir minha vaga na imersão Masterglass.";
+  return `https://wa.me/${WHATSAPP_ALAIDE_E164}?text=${encodeURIComponent(text)}`;
 }
 
 export function agencyWhatsAppUrl() {

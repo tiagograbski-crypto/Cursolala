@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { HandoffStickyCta } from "@/components/home/HandoffStickyCta";
 import { HomeFounderStage } from "@/components/home/HomeFounderStage";
 import { SNAP_CARD, SnapRail } from "@/components/home/SnapRail";
 import {
@@ -7,6 +8,7 @@ import {
   BookOpen,
   Check,
   Clock,
+  Dna,
   Fingerprint,
   FlaskConical,
   Lock,
@@ -16,12 +18,10 @@ import {
   X,
 } from "lucide-react";
 import { asset } from "@/lib/asset";
-import { WHATSAPP_CONCIERGE_E164 } from "@/lib/tenant";
+import { alaideWhatsAppUrl } from "@/lib/tenant";
 
-/** Placeholder visual — troque `55SEUNUMERO` pelo DDI+DDD+número do Concierge. */
-const WHATSAPP_URL =
-  `https://wa.me/${WHATSAPP_CONCIERGE_E164}?text=` +
-  encodeURIComponent("Olá, gostaria de pleitear uma credencial Masterglass.");
+const WHATSAPP_VAGA_URL = alaideWhatsAppUrl("vaga");
+const WHATSAPP_ALAIDE_URL = alaideWhatsAppUrl("fala");
 
 const SILVER_GLASS =
   "relative overflow-hidden bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-2xl border border-white/20 shadow-[0_8px_32px_rgba(255,255,255,0.1)] text-white";
@@ -109,7 +109,7 @@ const FAQ_ITEMS = [
   {
     question: "Onde e quando será a imersão?",
     answer:
-      "A imersão será dia 22 de Novembro. O local exato e a logística completa são enviados junto com sua credencial após a aprovação do seu perfil pelo Concierge.",
+      "A imersão será dia 22 de Novembro. O local exato e a logística completa chegam com a credencial depois que a Alaíde confirma a sua vaga.",
   },
   {
     question: "Terei acesso ao Acervo Digital?",
@@ -125,7 +125,7 @@ const MENTOR_POINTS = [
 ] as const;
 
 const ADMISSION_STEPS = [
-  "Solicite sua análise de perfil via Concierge.",
+  "Chame a Alaíde no WhatsApp e conte o seu nível na bancada.",
   "Aprovação de vaga e alinhamento de nível.",
   "Recebimento do passaporte presencial e liberação do Acervo.",
 ] as const;
@@ -155,10 +155,16 @@ export default function MasterglassVitrinePage() {
         <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3 px-4 py-4 sm:px-6 md:px-12">
           <Link
             href="/"
-            className={`min-w-0 text-xs tracking-[0.22em] text-white/90 whitespace-nowrap sm:tracking-[0.3em] ${CTA_FOCUS}`}
-            aria-label="MASTERGLASS — início"
+            className={`min-w-0 ${CTA_FOCUS}`}
+            aria-label="MASTERGLASS Colorimetria — início"
           >
-            MASTERGLASS
+            <span className="flex min-w-0 items-center gap-1.5 sm:gap-2">
+              <span className="text-xs tracking-[0.22em] text-white sm:tracking-[0.3em]">MASTERGLASS</span>
+              <span className="text-xs text-white/20" aria-hidden>
+                |
+              </span>
+              <span className="truncate text-[9px] tracking-widest text-pearl/70">COLORIMETRIA</span>
+            </span>
           </Link>
           <Link
             href="/aluna/login"
@@ -171,18 +177,24 @@ export default function MasterglassVitrinePage() {
       </header>
 
       <main className="relative z-0 w-full pb-[calc(6.5rem+env(safe-area-inset-bottom))]">
-        <section id="vitrine-hero" className="relative isolate min-h-[100dvh] overflow-hidden bg-zinc-950">
+        <section id="vitrine-hero" className="relative isolate flex min-h-[100dvh] flex-col overflow-hidden bg-zinc-950">
           <HomeFounderStage />
           <div
-            className="relative z-10 mx-auto flex w-full max-w-6xl flex-col justify-center px-5 pb-24 pt-[calc(5.5rem+env(safe-area-inset-top))] md:px-8 md:pb-28 md:pt-32"
+            className="relative z-10 mx-auto mt-auto w-full max-w-6xl px-5 pb-[calc(5.75rem+env(safe-area-inset-bottom))] pt-[calc(5.5rem+env(safe-area-inset-top))] md:px-8 md:pb-24"
           >
             <div className="w-full max-w-xl">
+              <p className="mb-6 inline-flex max-w-full items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-md">
+                <Dna className="size-3 shrink-0 text-pearl" strokeWidth={1.75} aria-hidden />
+                <span className="text-[9px] font-medium uppercase leading-snug tracking-widest text-white/80">
+                  Módulo especialista: Colorimetria & Tricologia
+                </span>
+              </p>
               <h1 className="mb-4 font-serif text-3xl font-medium leading-[1.12] text-pearl md:text-5xl">
                 Previsibilidade Absoluta. O Fim do Achismo na Sua Bancada.
               </h1>
               <p className="text-sm leading-relaxed text-white/70 md:text-base">
-                A ciência exata para revelar fundos de clareamento perfeitos e neutralizações que não desbotam. Uma
-                imersão presencial ancorada pelo acervo digital mais cobiçado da colorimetria.
+                A ciência exata para revelar fundos de clareamento perfeitos e neutralizações impecáveis. Uma imersão
+                presencial em Colorimetria Avançada, ancorada pelo acervo digital mais cobiçado do mercado.
               </p>
 
               <div
@@ -198,18 +210,18 @@ export default function MasterglassVitrinePage() {
               </div>
 
               <a
-                href={WHATSAPP_URL}
+                href={WHATSAPP_VAGA_URL}
                 target="_blank"
                 rel="noopener noreferrer"
                 className={`mt-8 inline-flex min-h-12 w-full max-w-md items-center justify-center rounded-full bg-white px-8 py-3.5 text-sm font-medium text-zinc-950 transition hover:bg-pearl sm:w-auto ${CTA_FOCUS}`}
               >
-                Pleitear uma Credencial
+                Garantir minha vaga
               </a>
             </div>
           </div>
         </section>
 
-        <section className="px-5 py-16 md:px-8 md:py-24">
+        <section className="px-5 py-8 md:px-8 md:py-10">
           <p className="mx-auto max-w-3xl text-center font-serif text-lg leading-relaxed text-white/80 md:text-2xl">
             Você não precisa de mais &apos;receitinhas&apos;. Você precisa de matemática química. O método Masterglass é
             a diferença entre contar com a sorte e comandar a química sem medo do lavatório.
@@ -392,7 +404,7 @@ export default function MasterglassVitrinePage() {
 
         <section className="px-5 pb-16 md:px-8 md:pb-24">
           <div className="mx-auto max-w-2xl">
-            <h2 className="font-serif text-2xl font-medium text-pearl md:text-3xl">Como Pleitear sua Credencial</h2>
+            <h2 className="font-serif text-2xl font-medium text-pearl md:text-3xl">Como garantir sua vaga</h2>
             <ol className="mt-10 space-y-8 border-l border-white/20 pl-6">
               {ADMISSION_STEPS.map((step, index) => (
                 <li key={step} className="relative text-sm leading-relaxed text-white/75 md:text-base">
@@ -422,15 +434,7 @@ export default function MasterglassVitrinePage() {
         </footer>
       </main>
 
-      <a
-        href={WHATSAPP_URL}
-        target="_blank"
-        rel="noopener noreferrer"
-        className={`fixed bottom-[max(1.5rem,env(safe-area-inset-bottom))] left-6 right-6 z-50 flex min-h-12 items-center justify-center rounded-full bg-white px-6 text-sm font-medium text-zinc-950 shadow-[0_16px_40px_rgba(0,0,0,0.45)] transition hover:bg-pearl sm:left-auto sm:right-6 sm:w-auto sm:min-w-[16rem] ${CTA_FOCUS}`}
-        aria-label="Falar com o Concierge no WhatsApp"
-      >
-        Falar com o Concierge
-      </a>
+      <HandoffStickyCta href={WHATSAPP_ALAIDE_URL} />
     </div>
   );
 }
