@@ -44,8 +44,8 @@ export const WHATSAPP_ALAIDE_E164 = "554796912277";
 export function alaideWhatsAppUrl(intent: "vaga" | "fala" = "vaga") {
   const text =
     intent === "fala"
-      ? "Olá Alaíde, quero falar sobre a imersão Masterglass."
-      : "Olá Alaíde, quero garantir minha vaga na imersão Masterglass.";
+      ? "Olá Alaíde, quero falar sobre o módulo de Colorimetria."
+      : "Olá Alaíde, quero garantir minha vaga no módulo de Colorimetria.";
   return `https://wa.me/${WHATSAPP_ALAIDE_E164}?text=${encodeURIComponent(text)}`;
 }
 

@@ -69,18 +69,24 @@ const IMMERSION_IMAGES = [
 
 const ACERVO = [
   {
-    label: "Módulo I",
-    title: "Diagnóstico e Arquitetura do Fio: A biologia da descoloração segura sem corte químico.",
+    id: "01",
+    kicker: "Diagnóstico",
+    title: "Arquitetura do Fio",
+    benefit: "Lê a biologia antes de descolorir. Sem corte químico.",
     icon: BookOpen,
   },
   {
-    label: "Módulo II",
-    title: "A Matemática da Neutralização: Decodificando a Estrela de Oswald.",
+    id: "02",
+    kicker: "Neutralização",
+    title: "Estrela de Oswald",
+    benefit: "Mata o reflexo com matemática. Sem chute na bancada.",
     icon: Sigma,
   },
   {
-    label: "Módulo III",
-    title: "Química de Fixação: Oxidantes para cores à prova de desbotamento.",
+    id: "03",
+    kicker: "Oxidantes",
+    title: "Química de Fixação",
+    benefit: "Volumagem certa: cor que não desbota no lavatório.",
     icon: FlaskConical,
   },
 ] as const;
@@ -107,14 +113,14 @@ const FAQ_ITEMS = [
       "O método Masterglass constrói o conhecimento desde a base da estrutura do fio até a matemática avançada de neutralização. Perfeito para quem quer corrigir seus vícios técnicos ou começar do zero com o padrão correto.",
   },
   {
-    question: "Onde e quando será a imersão?",
+    question: "Onde e quando é o módulo de Colorimetria?",
     answer:
-      "A imersão será dia 22 de Novembro. O local exato e a logística completa chegam com a credencial depois que a Alaíde confirma a sua vaga.",
+      "O módulo presencial é dia 22 de Novembro. O local e a logística chegam com a credencial depois que a Alaíde confirma a sua vaga.",
   },
   {
     question: "Terei acesso ao Acervo Digital?",
     answer:
-      "Sim. Todas as profissionais admitidas na imersão presencial ganham acesso vitalício à sua licença no portal MASTERGLASS para consultas na bancada.",
+      "Sim. Quem entra no módulo de Colorimetria ganha acesso vitalício ao acervo no portal MASTERGLASS, para consultar na bancada.",
   },
 ] as const;
 
@@ -193,8 +199,8 @@ export default function MasterglassVitrinePage() {
                 Previsibilidade Absoluta. O Fim do Achismo na Sua Bancada.
               </h1>
               <p className="text-sm leading-relaxed text-white/70 md:text-base">
-                A ciência exata para revelar fundos de clareamento perfeitos e neutralizações impecáveis. Uma imersão
-                presencial em Colorimetria Avançada, ancorada pelo acervo digital mais cobiçado do mercado.
+                Este é o módulo de Colorimetria: a ciência exata para fundos de clareamento perfeitos e neutralizações
+                impecáveis. Presencial, com o acervo digital na bancada.
               </p>
 
               <div
@@ -206,7 +212,7 @@ export default function MasterglassVitrinePage() {
                   <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400/60 opacity-75 motion-reduce:animate-none" />
                   <span className="relative inline-flex size-2 rounded-full bg-emerald-500" />
                 </span>
-                <span className="truncate">Próxima Imersão: 22/Nov • 8/10 Credenciais</span>
+                <span className="truncate">Módulo Colorimetria: 22/Nov • 8/10 vagas</span>
               </div>
 
               <a
@@ -228,23 +234,30 @@ export default function MasterglassVitrinePage() {
           </p>
         </section>
 
-        <section className="pb-16 md:pb-24">
-          <div className="mx-auto max-w-6xl px-5 md:px-8">
+        <section className="px-5 pb-16 md:px-8 md:pb-24">
+          <div className="mx-auto max-w-6xl">
             <h2 className="font-serif text-xl font-medium text-pearl md:text-2xl">O Acervo Digital</h2>
-          </div>
-          <div className="mt-8">
-            <SnapRail ariaLabel="Módulos do acervo digital" count={ACERVO.length}>
-              {ACERVO.map(({ label, title, icon: Icon }) => (
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/55">
+              Três protocolos da bancada. Do diagnóstico ao oxidante.
+            </p>
+            <ul className="mt-6 space-y-3 md:mt-8 md:grid md:grid-cols-3 md:gap-5 md:space-y-0">
+              {ACERVO.map(({ id, kicker, title, benefit, icon: Icon }) => (
                 <li
-                  key={label}
-                  className={`masterglass-silver-glass flex min-h-[11.5rem] flex-col gap-5 rounded-2xl p-6 text-pearl ${SNAP_CARD}`}
+                  key={id}
+                  className="masterglass-silver-glass flex items-start gap-4 rounded-2xl px-5 py-4 text-pearl md:h-full md:flex-col md:gap-5 md:p-6"
                 >
-                  <span className="text-[10px] uppercase tracking-[0.28em] text-white/40">{label}</span>
-                  <Icon className="size-5 text-white/45" strokeWidth={1.5} aria-hidden />
-                  <p className="font-serif text-base leading-snug text-pearl/95 md:text-lg">{title}</p>
+                  <span className="flex shrink-0 items-center gap-3">
+                    <span className="font-serif text-2xl leading-none text-white/35">{id}</span>
+                    <Icon className="hidden size-5 text-white/45 md:block" strokeWidth={1.5} aria-hidden />
+                  </span>
+                  <div className="min-w-0">
+                    <p className="text-[10px] font-medium uppercase tracking-[0.16em] text-white/40">{kicker}</p>
+                    <p className="mt-1 font-serif text-lg leading-snug text-pearl md:text-xl">{title}</p>
+                    <p className="mt-1.5 text-sm leading-5 text-white/60">{benefit}</p>
+                  </div>
                 </li>
               ))}
-            </SnapRail>
+            </ul>
           </div>
         </section>
 
@@ -276,13 +289,13 @@ export default function MasterglassVitrinePage() {
 
         <section className="pb-16 md:pb-24">
           <div className="mx-auto max-w-6xl px-5 md:px-8">
-            <h2 className="font-serif text-2xl font-medium text-pearl md:text-3xl">A Imersão Masterglass</h2>
+            <h2 className="font-serif text-2xl font-medium text-pearl md:text-3xl">O Módulo de Colorimetria</h2>
             <p className="mt-4 max-w-2xl text-sm leading-relaxed text-white/65 md:text-base">
-              Uma experiência hands-on. Não é sobre assistir, é sobre executar sob a supervisão do mestre.
+              Não é aula assistida. É Colorimetria na bancada, sob a supervisão da Alaíde.
             </p>
           </div>
           <div className="mt-8">
-            <SnapRail ariaLabel="Fotos da imersão presencial" count={IMMERSION_IMAGES.length}>
+            <SnapRail ariaLabel="Fotos do módulo presencial de Colorimetria" count={IMMERSION_IMAGES.length}>
               {IMMERSION_IMAGES.map(({ src, alt }) => (
                 <li
                   key={src}
@@ -329,17 +342,17 @@ export default function MasterglassVitrinePage() {
 
         <section className="px-5 pb-16 md:px-8 md:pb-24">
           <div className="relative mx-auto max-w-6xl">
-            <div className="relative aspect-video w-full overflow-hidden rounded-3xl bg-zinc-900">
+            <div className="relative aspect-[3/4] w-full overflow-hidden rounded-3xl bg-zinc-900 sm:aspect-[4/5] md:aspect-video">
               <Image
                 src={asset("/images/alaide-bg.jpg")}
                 alt="Alaíde Proença"
                 fill
                 unoptimized
                 sizes="100vw"
-                className="object-cover object-top"
+                className="object-cover object-[center_12%] md:object-[center_18%]"
               />
             </div>
-            <div className="masterglass-silver-glass relative z-10 mx-3 -mt-12 rounded-2xl p-6 text-pearl md:mx-8 md:p-8">
+            <div className="masterglass-silver-glass relative z-10 mt-4 rounded-2xl p-6 text-pearl md:mx-8 md:-mt-12 md:p-8">
               <h2 className="font-serif text-3xl font-medium text-pearl md:text-4xl">Alaíde Proença</h2>
               <ul className="mt-5 space-y-3">
                 {MENTOR_POINTS.map((point) => (
