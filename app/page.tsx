@@ -483,7 +483,7 @@ export default function MasterglassVitrinePage() {
         </section>
 
         <footer
-          className={`border-t border-white/5 ${SECTION_X} pb-[calc(7.5rem+env(safe-area-inset-bottom))] pt-[clamp(3rem,6vw,5rem)]`}
+          className={`border-t border-white/5 ${SECTION_X} pb-[calc(10.5rem+env(safe-area-inset-bottom))] pt-[clamp(3rem,6vw,5rem)]`}
         >
           <div className={`${SHELL} flex flex-col gap-10 md:flex-row md:items-end md:justify-between`}>
             <div>
@@ -511,7 +511,10 @@ export default function MasterglassVitrinePage() {
         </footer>
       </main>
 
-      <HandoffStickyCta href={WHATSAPP_ALAIDE_URL} />
+      <HandoffStickyCta
+        href={WHATSAPP_ALAIDE_URL}
+        secondary={{ href: "/proposta", label: "Proposta de parceria" }}
+      />
     </div>
   );
 }
