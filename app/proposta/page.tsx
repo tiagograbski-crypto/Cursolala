@@ -1,155 +1,727 @@
 "use client";
 
-import { Check, ShieldCheck } from "lucide-react";
-import { useCallback, useState } from "react";
+import {
+  CalendarClock,
+  Check,
+  Database,
+  Fingerprint,
+  Globe,
+  Scale,
+} from "lucide-react";
+import { useCallback, useEffect, useId, useState, type ReactNode } from "react";
 
+/** Template reutilizável — altere apenas este objeto para novos clientes GL.ID. */
+const contractData = {
+  licensor: "GL.ID",
+  licensorWebsite: "https://glid.ia.br",
+  clientBrand: "Masterglass",
+  clientSignatory: "Alaíde Proença",
+  clientMethodName: "Estrela de Oswald",
+  projectName: "Plataforma Proprietária de Alta Conversão",
+  courtesyDays: 30,
+  secondInstallmentDays: 30,
+  deliveryBusinessDaysMin: 30,
+  deliveryBusinessDaysMax: 45,
+  domainExample: "suamarca.com.br",
+  partnerListCents: 699_700,
+  partnerSetupCents: 409_700,
+  whiteLabelListCents: 1_799_700,
+  whiteLabelCents: 1_199_700,
+  tiers: [
+    { id: "starter", name: "Starter", volume: "Até 10 alunas ativas", monthlyCents: 9_700 },
+    { id: "growth", name: "Growth", volume: "De 11 a 50 alunas", monthlyCents: 19_700 },
+    { id: "elite", name: "Elite", volume: "Acima de 50 alunas", monthlyCents: 29_700 },
+  ],
+  architectCredit: "Thiago Dias Grabski / GL.ID (Glide)",
+  stack: "Next.js / Edge Computing / Serverless DB",
+} as const;
+
+type Plano = "A" | "B";
+
+const FORM_ACCEPT_LABEL = "Declaro ter lido e estar de pleno acordo com os termos deste contrato.";
+
+const SHEET =
+  "rounded-xl bg-[#FDFBF7] p-6 text-zinc-800 shadow-2xl shadow-black/40 sm:p-10 md:p-12";
+const PANEL = "rounded-lg border border-zinc-200 bg-white p-6 shadow-sm";
+const H2 = "font-serif text-xl font-semibold text-zinc-900";
+const BODY = "text-sm leading-relaxed text-zinc-700";
+const LABEL = "text-[10px] font-medium uppercase tracking-[0.28em] text-zinc-500";
+const INPUT =
+  "mt-1.5 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2.5 text-sm text-zinc-900 shadow-sm placeholder:text-zinc-400 focus:border-[#4A5D23] focus:outline-none focus:ring-2 focus:ring-[#4A5D23]/20 disabled:bg-zinc-50";
 const CTA_FOCUS =
-  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-pearl";
+  "focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#4A5D23]";
+const BTN_SIGN =
+  "bg-[#4A5D23] font-bold text-white hover:brightness-110 disabled:cursor-not-allowed disabled:opacity-40";
 
-const GLASS_CARD =
-  "rounded-[28px] border border-white/10 bg-white/5 p-7 shadow-[0_8px_32px_rgba(0,0,0,0.35)] backdrop-blur-xl sm:p-8";
+function formatBRL(cents: number) {
+  return (cents / 100).toLocaleString("pt-BR", {
+    style: "currency",
+    currency: "BRL",
+  });
+}
 
-function proposalAcceptWhatsAppUrl() {
-  const text =
-    "Olá, equipe GL PRO. Sou Alaíde Proença (Masterglass). Li e aprovo integralmente o Acordo de Licenciamento Tecnológico Masterglass x GL PRO, incluindo o Setup de R$ 3.800,00 e os termos de responsabilidade e LGPD. Autorizo o início da implantação da plataforma.";
+function formatAcceptTimestamp(date: Date) {
+  return date.toLocaleString("pt-BR", {
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+}
+
+function digitsOnly(value: string) {
+  return value.replace(/\D/g, "");
+}
+
+function buildAcceptWhatsAppUrl(payload: {
+  legalName: string;
+  taxId: string;
+  email: string;
+  acceptedAt: string;
+  plano: Plano;
+}) {
+  const half = formatBRL(contractData.partnerSetupCents / 2);
+  const pathLine =
+    payload.plano === "A"
+      ? [
+          "Plano contratado: A — Ecossistema GL.ID",
+          `Setup: ${formatBRL(contractData.partnerSetupCents)}`,
+          `Pagamento: 50% no start (${half}) e 50% na entrega (${half}), em até ${contractData.secondInstallmentDays} dias.`,
+          "Propriedade: licença de uso. Código-fonte da GL.ID. Conteúdo da cliente.",
+          `Cloud: ${contractData.courtesyDays} dias de cortesia; depois, Starter, Growth ou Elite.`,
+        ]
+      : [
+          "Plano contratado: B — Independência Total",
+          `Compra: ${formatBRL(contractData.whiteLabelCents)}`,
+          "Pagamento: entrada + parcelamento a combinar.",
+          "Propriedade: aquisição de ativo. Transferência total e definitiva do código-fonte.",
+          "Cloud: isenção de mensalidade GL.ID. Provedores por conta da cliente.",
+        ];
+
+  const text = [
+    `Assinatura eletrônica — ${contractData.clientBrand} x ${contractData.licensor}`,
+    `Nome/Razão: ${payload.legalName}`,
+    `CPF/CNPJ: ${payload.taxId}`,
+    `E-mail: ${payload.email}`,
+    `Data/hora aceite: ${payload.acceptedAt}`,
+    ...pathLine,
+    "Declaro ter lido e estar de pleno acordo com os termos do plano escolhido.",
+  ].join("\n");
+
   return `https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`;
 }
 
-export default function PropostaParceriaPage() {
-  const [accepted, setAccepted] = useState(false);
+const UNIVERSAL_CLAUSES = [
+  {
+    id: "domain",
+    title: "Domínio",
+    icon: Globe,
+    paragraphs: [
+      `Independência total. A plataforma roda em domínio próprio da cliente (exemplo: ${contractData.domainExample}). Aquisição e renovação anual têm custo variável e são pagas por ela, direto ao órgão registrador.`,
+    ],
+  },
+  {
+    id: "sla",
+    title: "Prazos de Engenharia (SLA)",
+    icon: CalendarClock,
+    paragraphs: [
+      `${contractData.deliveryBusinessDaysMin} a ${contractData.deliveryBusinessDaysMax} dias úteis, contados da compensação da entrada.`,
+    ],
+  },
+] as const;
 
-  const handleAccept = useCallback(() => {
-    setAccepted(true);
-    window.open(proposalAcceptWhatsAppUrl(), "_blank", "noopener,noreferrer");
+const HOLD_HARMLESS = [
+  {
+    term: "Infraestrutura de Terceiros",
+    text: "A plataforma roda em infraestrutura global de terceiros (Vercel, AWS, Google Cloud, Stripe e Mercado Pago). A entrega é feita no estado em que se encontra ('as is'), em regime de melhor esforço. A GL.ID não responde por quedas desses serviços, bloqueios de gateways de pagamento, lucros cessantes ou vendas perdidas.",
+  },
+  {
+    term: "Propriedade Intelectual e Pirataria",
+    text: "A GL.ID fornece a 'estante tecnológica'. Todo o conteúdo é de propriedade e responsabilidade da Contratante. Vazamentos, pirataria ou cópias de vídeo por terceiros não geram responsabilidade à GL.ID, visto que não existe proteção intransponível na internet.",
+  },
+  {
+    term: "LGPD e Proteção de Dados",
+    text: "A Contratante atua como Controladora dos dados de suas alunas. A GL.ID atua estritamente como Operadora tecnológica, ficando civil e criminalmente isenta de ações movidas por alunas referentes a vazamento de dados, promessas comerciais do curso ou chargebacks.",
+  },
+] as const;
+
+const OPERATIONAL_FAQ = [
+  {
+    q: "Se o meu conteúdo e o direito de uso são vitalícios, por que existe a necessidade de pagar manutenção de nuvem (mensalidade) no longo prazo?",
+    a: "Pense na plataforma como um Imóvel Próprio. O Setup inicial (R$ 4.097 ou R$ 11.997) é a compra do apartamento: as paredes, a arquitetura e os móveis são seus para sempre. Ninguém nunca mais vai te cobrar por eles. No entanto, para o apartamento funcionar, você precisa pagar a 'conta de luz e o condomínio' todos os meses. Na tecnologia, a 'conta de luz' é o Servidor na Nuvem (Amazon, Vercel, Firebase) que mantém o site 24 horas no ar para suas alunas não ficarem no escuro. Se você parar de pagar o servidor, a plataforma e o seu método continuam sendo seus (você não perde seus direitos), mas o site sai do ar até a fatura ser regularizada.",
+  },
+  {
+    id: "videos",
+    q: "Onde ficam armazenados os vídeos das aulas e quem paga por esse armazenamento quando o número de alunas crescer?",
+    a: "Para garantir a máxima velocidade e qualidade de streaming, utilizamos uma arquitetura moderna dividida em duas partes:",
+    points: [
+      "Os Vídeos (arquivos pesados): Devem ser hospedados pela Contratante em plataformas especializadas de streaming de sua escolha (como Vimeo, Panda Video, ou até mesmo YouTube Privado). O custo do plano dessas plataformas de vídeo, caso não utilize opções gratuitas, é de responsabilidade direta da Contratante.",
+    ],
+  },
+  {
+    q: "E se eu quiser adicionar, alterar ou excluir vídeos e módulos de aula no futuro?",
+    a: "Você tem total autonomia. A plataforma é entregue com um painel gerenciador onde sua própria equipe pode subir novos vídeos, PDFs e criar novos módulos de forma ilimitada, sem depender da GL.ID e sem custos adicionais de desenvolvimento.",
+  },
+  {
+    q: "E se eu quiser alterar o design (cores, layout) ou pedir funcionalidades novas?",
+    a: "Mudanças estruturais, de layout ou a criação de novas lógicas de negócio envolvem reescrita de código-fonte. Essas solicitações são tratadas via 'Ticket de Atualização'. Você solicita o que deseja, e nós enviamos um orçamento pontual baseado em nossa Hora Técnica B2B (atualmente fixada em R$ 150,00/hora).",
+  },
+] as const;
+
+/** Escopo exclusivo do Plano A — não renderizar no Plano B. */
+const PLAN_A_CLOUD_FAQ = {
+  q: "O que a mensalidade de Manutenção Cloud (ex: R$ 97,00) realmente cobre?",
+  a: "A manutenção cloud cobre exclusivamente a infraestrutura ('a conta de luz e aluguel do terreno'): mantém a plataforma no ar 24/7, garante a velocidade de carregamento dos dados e a segurança do banco de dados contra ataques. Ela não inclui suporte técnico para alterações de design, edição de vídeos ou criação de novas funcionalidades.",
+} as const;
+
+const DB_POINT_A =
+  "O Banco de Dados (textos, senhas, estrutura): Fica na nossa infraestrutura em nuvem.";
+const DB_POINT_B =
+  "O Banco de Dados (textos, senhas, estrutura): Fica nos provedores de nuvem assumidos pela Contratante (Google Firebase / Vercel), com cobrança direta no cartão da cliente.";
+
+export default function PropostaSmartContractPage() {
+  const acceptId = useId();
+  const [planoSelecionado, setPlanoSelecionado] = useState<"A" | "B" | null>(null);
+  const [signed, setSigned] = useState(false);
+  const [legalName, setLegalName] = useState("");
+  const [taxId, setTaxId] = useState("");
+  const [email, setEmail] = useState("");
+  const [formAccepted, setFormAccepted] = useState(false);
+  const [liveClock, setLiveClock] = useState("");
+  const [acceptedAt, setAcceptedAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    const tick = () => setLiveClock(formatAcceptTimestamp(new Date()));
+    tick();
+    const id = setInterval(tick, 1000);
+    return () => clearInterval(id);
   }, []);
 
+  const emailLooksValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim());
+  const taxDigits = digitsOnly(taxId);
+  const taxLooksValid = taxDigits.length === 11 || taxDigits.length === 14;
+
+  const canSign =
+    !signed &&
+    planoSelecionado !== null &&
+    formAccepted &&
+    legalName.trim().length >= 3 &&
+    taxLooksValid &&
+    emailLooksValid;
+
+  const displayTimestamp = acceptedAt ?? liveClock;
+
+  const handleSign = useCallback(() => {
+    if (!canSign || !planoSelecionado) return;
+    const stamp = formatAcceptTimestamp(new Date());
+    setAcceptedAt(stamp);
+    setSigned(true);
+    window.open(
+      buildAcceptWhatsAppUrl({
+        legalName: legalName.trim(),
+        taxId: taxId.trim(),
+        email: email.trim(),
+        acceptedAt: stamp,
+        plano: planoSelecionado,
+      }),
+      "_blank",
+      "noopener,noreferrer",
+    );
+  }, [canSign, email, legalName, planoSelecionado, taxId]);
+
   return (
-    <div className="min-h-dvh bg-zinc-950 text-pearl scheme-dark selection:bg-white/20 selection:text-pearl">
-      <div
-        className="pointer-events-none fixed inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(255,255,255,0.08),transparent)]"
-        aria-hidden
-      />
-
-      <main className="relative mx-auto w-full max-w-3xl px-6 pb-[max(2.5rem,env(safe-area-inset-bottom))] pt-[max(3rem,env(safe-area-inset-top))] sm:px-8 sm:pb-16 sm:pt-20">
-        <header className="border-b border-white/10 pb-10 text-center">
-          <p className="font-sans text-[10px] font-medium uppercase tracking-[0.35em] text-white/40">
-            Proposta de Parceria
-          </p>
-          <h1 className="mt-4 font-serif text-[clamp(1.75rem,5vw,2.5rem)] font-semibold leading-tight tracking-tight text-pearl">
-            Acordo de Licenciamento Tecnológico
-          </h1>
-          <p className="mt-3 font-sans text-sm font-light tracking-wide text-white/60">
-            Masterglass x GL PRO
-          </p>
-        </header>
-
-        <article className="mt-12 space-y-12 font-sans text-[clamp(0.9375rem,2.2vw,1.0625rem)] leading-relaxed text-white/85">
-          <section>
-            <h2 className="mb-4 font-serif text-lg font-medium text-pearl">O Escopo</h2>
-            <p className="text-white/75">
-              Este documento formaliza a entrega de uma Plataforma Proprietária (SaaS Single-Tenant),
-              desenvolvida com arquitetura mobile-first, animações nativas e infraestrutura de banco de
-              dados. Um ativo digital avaliado em mais de R$ 35.000 no mercado de tecnologia, projetado
-              exclusivamente para a escalabilidade da marca Masterglass.
+    <div className="relative min-h-dvh bg-zinc-950">
+      <main className="relative z-0 mx-auto w-full max-w-5xl px-4 pb-[max(2rem,env(safe-area-inset-bottom))] pt-[max(1.5rem,env(safe-area-inset-top))] md:px-6 md:pb-14 md:pt-10">
+        <div className={`relative ${SHEET}`}>
+          <header className="border-b border-zinc-200 pb-8 text-center">
+            <p className={LABEL}>Master Smart Contract · GL.ID</p>
+            <h1 className="mt-3 font-serif text-[clamp(1.85rem,4.2vw,2.75rem)] font-semibold leading-tight text-zinc-900">
+              Contrato de Desenvolvimento de Software
+            </h1>
+            <p className="mt-2 text-sm text-zinc-600">
+              {contractData.clientBrand} ×{" "}
+              <a
+                href={contractData.licensorWebsite}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-zinc-900 underline decoration-zinc-300 underline-offset-2 hover:decoration-[#4A5D23]"
+              >
+                {contractData.licensor}
+              </a>
             </p>
-          </section>
+            <p className={`mx-auto mt-5 max-w-2xl ${BODY}`}>
+              Escolha um caminho para{" "}
+              <span className="font-medium text-zinc-900">{contractData.projectName}</span>. O
+              documento abaixo abre somente as cláusulas do plano marcado.
+            </p>
+          </header>
 
-          <section>
-            <h2 className="mb-4 font-serif text-lg font-medium text-pearl">O Investimento</h2>
-            <div className={`${GLASS_CARD} ring-1 ring-white/5`}>
-              <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-white/45">
-                Setup de Ativação
-              </p>
-              <p className="mt-3 font-serif text-[clamp(2rem,6vw,2.75rem)] font-semibold tabular-nums text-pearl">
-                R$ 3.800,00
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-white/70">
-                Taxa única de arquitetura, design e entrega das chaves da plataforma. O código-fonte e o
-                motor tecnológico permanecem como propriedade intelectual da GL PRO, sendo licenciados
-                para uso exclusivo da Masterglass.
-              </p>
-            </div>
-          </section>
-
-          <section>
-            <h2 className="mb-4 font-serif text-lg font-medium text-pearl">
-              Infraestrutura e Incentivo de Lançamento
+          <section aria-labelledby="paths-heading" className="relative z-10 mt-10">
+            <h2 id="paths-heading" className="sr-only">
+              Escolha do plano
             </h2>
-            <div className={GLASS_CARD}>
-              <p className="text-[10px] font-medium uppercase tracking-[0.28em] text-white/45">
-                Licenciamento e Cloud
-              </p>
-              <p className="mt-4 text-sm leading-relaxed text-white/70">
-                Para apoiar a tração inicial da mentoria, a GL PRO isentará a taxa de infraestrutura, banco
-                de dados e manutenção de servidores pelos primeiros 90 dias (3 meses de cortesia). Após este
-                período, a manutenção do ecossistema terá um custo fixo de R$ 149,00 mensais (ou R$ 49 por
-                aluna, o que for acordado).
-              </p>
+            <div className="relative z-10 grid items-stretch gap-4 md:grid-cols-2">
+              <PlanChoice
+                plano="A"
+                active={planoSelecionado === "A"}
+                dimmed={planoSelecionado !== null && planoSelecionado !== "A"}
+                disabled={signed}
+                onSelect={setPlanoSelecionado}
+                kicker="Ecossistema GL.ID"
+                title="Plano Parceiro"
+                listPrice={formatBRL(contractData.partnerListCents)}
+                price={formatBRL(contractData.partnerSetupCents)}
+                offer="Condição Especial de Parceria"
+              />
+              <PlanChoice
+                plano="B"
+                active={planoSelecionado === "B"}
+                dimmed={planoSelecionado !== null && planoSelecionado !== "B"}
+                disabled={signed}
+                onSelect={setPlanoSelecionado}
+                kicker="Independência Total"
+                title="White Label"
+                listPrice={formatBRL(contractData.whiteLabelListCents)}
+                price={formatBRL(contractData.whiteLabelCents)}
+                offer="Valor Promocional"
+              />
             </div>
           </section>
 
-          <section>
-            <div className="mb-5 flex items-center gap-2.5">
-              <ShieldCheck className="size-5 shrink-0 text-white/50" strokeWidth={1.5} aria-hidden />
-              <h2 className="font-serif text-lg font-medium text-pearl">
-                Termos de Responsabilidade e LGPD
-              </h2>
+          {planoSelecionado === null ? (
+            <p className="mt-8 text-center text-sm text-zinc-500">
+              Selecione a Opção A ou a Opção B para ler o contrato correspondente.
+            </p>
+          ) : (
+            <div className="mt-10 space-y-10">
+              <PlanClauses plano={planoSelecionado} />
+              <UniversalClauses />
+              <HoldHarmless />
+              <OperationalFaq plano={planoSelecionado} />
+              <SignatureBlock
+                plano={planoSelecionado}
+                signed={signed}
+                canSign={canSign}
+                acceptId={acceptId}
+                legalName={legalName}
+                taxId={taxId}
+                email={email}
+                formAccepted={formAccepted}
+                displayTimestamp={displayTimestamp}
+                onLegalName={setLegalName}
+                onTaxId={setTaxId}
+                onEmail={setEmail}
+                onFormAccepted={setFormAccepted}
+                onSign={handleSign}
+              />
             </div>
-            <div className={`${GLASS_CARD} space-y-6 text-sm text-zinc-400`}>
-              <div>
-                <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
-                  Responsabilidade GL PRO
-                </p>
-                <p className="leading-relaxed">
-                  Garantir a estabilidade técnica da plataforma (99.9% Uptime), manutenção do servidor e
-                  proteção criptografada dos dados das alunas conforme a LGPD (Lei Geral de Proteção de
-                  Dados).
-                </p>
-              </div>
-              <div className="border-t border-white/10 pt-6">
-                <p className="mb-2 text-[10px] font-medium uppercase tracking-[0.22em] text-white/35">
-                  Responsabilidade Masterglass
-                </p>
-                <p className="leading-relaxed">
-                  A GL PRO atua estritamente como provedora de infraestrutura de software. A Masterglass
-                  (Alaíde Proença) detém 100% da propriedade e responsabilidade civil, criminal e técnica
-                  sobre o conteúdo gravado, os métodos ensinados (física/química capilar), procedimentos
-                  realizados em alunas ou clientes, e transações financeiras oriundas das vendas.
-                </p>
-              </div>
-            </div>
-          </section>
-        </article>
-
-        <footer className="mt-14 border-t border-white/10 pt-10">
-          <p className="mb-6 text-center text-xs leading-relaxed text-white/40">
-            Ao aprovar, você confirma a leitura integral deste acordo e autoriza o início da implantação
-            técnica da plataforma licenciada.
-          </p>
-          <button
-            type="button"
-            onClick={handleAccept}
-            disabled={accepted}
-            className={`mx-auto flex min-h-12 w-full max-w-md items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-medium transition disabled:cursor-default sm:w-auto ${
-              accepted
-                ? "border border-emerald-500/30 bg-emerald-500/10 text-emerald-200/90"
-                : `bg-white text-zinc-950 hover:bg-pearl ${CTA_FOCUS}`
-            }`}
-          >
-            {accepted ? (
-              <>
-                <Check className="size-4" strokeWidth={2} aria-hidden />
-                Aceite enviado — implantação autorizada
-              </>
-            ) : (
-              "Aprovar e Iniciar Implantação"
-            )}
-          </button>
-          <p className="mt-12 text-center text-[10px] uppercase tracking-[0.3em] text-white/25">
-            Powered by GL PRO
-          </p>
-        </footer>
+          )}
+        </div>
       </main>
     </div>
+  );
+}
+
+function PlanChoice({
+  plano,
+  active,
+  dimmed,
+  disabled,
+  onSelect,
+  kicker,
+  title,
+  listPrice,
+  price,
+  offer,
+}: {
+  plano: Plano;
+  active: boolean;
+  dimmed: boolean;
+  disabled: boolean;
+  onSelect: (plano: Plano) => void;
+  kicker: string;
+  title: string;
+  listPrice: string;
+  price: string;
+  offer: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onSelect(plano)}
+      disabled={disabled}
+      aria-pressed={active}
+      className={`relative z-10 flex h-full cursor-pointer flex-col rounded-lg p-6 text-left transition pointer-events-auto md:p-8 ${CTA_FOCUS} ${
+        active
+          ? "border-[3px] border-[#4A5D23] bg-[#4A5D23]/[0.07] shadow-md"
+          : "border border-zinc-200 bg-white hover:border-zinc-300"
+      } ${dimmed ? "opacity-40" : "opacity-100"} disabled:cursor-default`}
+    >
+      <span className="flex items-start justify-between gap-3">
+        <span className={LABEL}>Opção {plano}</span>
+        {active ? (
+          <span className="inline-flex items-center gap-1 text-[10px] font-medium uppercase tracking-[0.16em] text-[#4A5D23]">
+            <Check className="size-3.5" strokeWidth={2.5} aria-hidden />
+            Ativo
+          </span>
+        ) : null}
+      </span>
+      <span className="mt-4 font-serif text-[clamp(1.65rem,3vw,2.15rem)] font-semibold leading-none text-zinc-900">
+        {kicker}
+      </span>
+      <span className="mt-2 text-sm text-zinc-600">{title}</span>
+      <span className="mt-6 text-sm text-zinc-400">
+        De: <span className="tabular-nums line-through">{listPrice}</span>
+      </span>
+      <span className="mt-1 text-3xl font-bold tabular-nums tracking-tight text-[#4A5D23]">
+        Por: {price}
+      </span>
+      <span className="mt-3 text-[10px] font-medium uppercase tracking-[0.18em] text-zinc-500">
+        {offer}
+      </span>
+    </button>
+  );
+}
+
+function PlanClauses({ plano }: { plano: Plano }) {
+  const half = formatBRL(contractData.partnerSetupCents / 2);
+
+  return (
+    <section aria-labelledby="plan-clauses-heading">
+      <h2 id="plan-clauses-heading" className={H2}>
+        Cláusulas do Plano {plano}
+      </h2>
+      <div className={`${PANEL} mt-4 space-y-8`}>
+        {plano === "A" ? (
+          <>
+            <Clause icon={Scale} title="Pagamento">
+              50% no start do projeto ({half}) e 50% na entrega da plataforma ({half}), com
+              vencimento em até {contractData.secondInstallmentDays} dias da entrega. Regra
+              inflexível: sem parcelamento.
+            </Clause>
+            <Clause icon={Fingerprint} title="Propriedade">
+              Licença de uso. O código-fonte permanece retido pela {contractData.licensor}. O
+              conteúdo é 100% da cliente ({contractData.clientBrand}).
+            </Clause>
+            <Clause icon={Database} title="Manutenção Cloud">
+              Cortesia de {contractData.courtesyDays} dias após a entrega. Depois, cobrança mensal
+              por uso de banco de dados.
+              <ul className="mt-4 divide-y divide-zinc-100 rounded-lg border border-zinc-200 bg-[#FDFBF7]">
+                {contractData.tiers.map((tier) => (
+                  <li
+                    key={tier.id}
+                    className="flex items-baseline justify-between gap-3 px-3 py-2.5 text-sm"
+                  >
+                    <span>
+                      <span className="font-medium text-zinc-900">{tier.name}</span>
+                      <span className="mt-0.5 block text-xs text-zinc-500">{tier.volume}</span>
+                    </span>
+                    <span className="shrink-0 font-medium tabular-nums text-zinc-900">
+                      {formatBRL(tier.monthlyCents)}
+                      <span className="text-xs font-normal text-zinc-500">/mês</span>
+                    </span>
+                  </li>
+                ))}
+              </ul>
+              <div className="mt-6 border-t border-zinc-200 pt-6">
+                <h4 className="font-serif text-base font-semibold text-zinc-900">
+                  Política de Inadimplência de Infraestrutura
+                </h4>
+                <ul className="mt-4 space-y-3">
+                  <LegalPoint term="Suspensão de Acesso">
+                    O atraso superior a 5 (cinco) dias úteis no pagamento da fatura de infraestrutura
+                    acarretará a suspensão temporária do acesso à plataforma, até a sua devida
+                    regularização.
+                  </LegalPoint>
+                  <LegalPoint term="Exclusão de Dados">
+                    O atraso superior a 60 (sessenta) dias autoriza a exclusão sumária e irreversível
+                    do banco de dados nos servidores, sem direito a backup e sem cabimento de qualquer
+                    indenização por parte da GL.ID.
+                  </LegalPoint>
+                </ul>
+              </div>
+            </Clause>
+          </>
+        ) : (
+          <>
+            <Clause icon={Scale} title="Pagamento">
+              Entrada mais parcelamento, a combinar. O preço de aquisição é{" "}
+              {formatBRL(contractData.whiteLabelCents)}.
+            </Clause>
+            <Clause icon={Fingerprint} title="Propriedade">
+              Aquisição de ativo. Transferência total e definitiva do código-fonte para a cliente (
+              {contractData.clientBrand}), após a quitação integral.
+            </Clause>
+            <Clause icon={Database} title="Manutenção Cloud">
+              <p>
+                Isenção de mensalidade {contractData.licensor}. A cliente assume a configuração e a
+                cobrança direta dos provedores de nuvem, no próprio cartão.
+              </p>
+              <p className="mt-4 rounded-lg border border-zinc-200 bg-[#FDFBF7] px-4 py-3">
+                <span className="font-medium text-zinc-900">Atenção sobre Escala: </span>
+                Ao adquirir a Independência Total, a Contratante atrelará seu próprio cartão de
+                crédito às provedoras de nuvem (Google Firebase / Vercel). O custo mensal cobrado
+                por essas empresas não é fixo; ele aumenta ou diminui automaticamente, em dólar,
+                conforme o volume de acessos e a quantidade de alunas ativas na plataforma.
+              </p>
+            </Clause>
+          </>
+        )}
+      </div>
+    </section>
+  );
+}
+
+function HoldHarmless() {
+  return (
+    <section aria-labelledby="hold-harmless-heading">
+      <h2 id="hold-harmless-heading" className={H2}>
+        Limitação de Responsabilidade e LGPD
+      </h2>
+      <div className={`${PANEL} mt-4`}>
+        <ul className="space-y-5">
+          {HOLD_HARMLESS.map((item) => (
+            <LegalPoint key={item.term} term={item.term}>
+              {item.text}
+            </LegalPoint>
+          ))}
+        </ul>
+      </div>
+    </section>
+  );
+}
+
+function LegalPoint({ term, children }: { term: string; children: ReactNode }) {
+  return (
+    <li className={BODY}>
+      <span className="font-semibold text-zinc-900">{term}: </span>
+      {children}
+    </li>
+  );
+}
+
+function UniversalClauses() {
+  return (
+    <section aria-labelledby="universal-heading">
+      <h2 id="universal-heading" className={H2}>
+        Cláusulas comuns
+      </h2>
+      <div className={`${PANEL} mt-4 space-y-8`}>
+        {UNIVERSAL_CLAUSES.map(({ id, title, icon, paragraphs }) => (
+          <Clause key={id} icon={icon} title={title}>
+            <div className="space-y-3">
+              {paragraphs.map((paragraph) => (
+                <p key={paragraph.slice(0, 48)}>{paragraph}</p>
+              ))}
+            </div>
+          </Clause>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function OperationalFaq({ plano }: { plano: Plano }) {
+  return (
+    <section aria-labelledby="faq-heading">
+      <h2 id="faq-heading" className={H2}>
+        Alinhamento Operacional (FAQ)
+      </h2>
+      <dl className="mt-4 divide-y divide-zinc-200 rounded-lg border border-zinc-200 bg-[#FDFBF7]">
+        {OPERATIONAL_FAQ.map((item) => (
+          <div key={item.q} className="px-6 py-6">
+            <dt className="font-serif text-base font-semibold leading-snug text-zinc-900">{item.q}</dt>
+            <dd className={`mt-3 ${BODY}`}>
+              {item.a}
+              {"points" in item ? (
+                <ol className="mt-3 list-decimal space-y-2 pl-5">
+                  {"id" in item && item.id === "videos" && plano === "A" && <li>{DB_POINT_A}</li>}
+                  {"id" in item && item.id === "videos" && plano === "B" && <li>{DB_POINT_B}</li>}
+                  {item.points.map((point) => (
+                    <li key={point.slice(0, 32)}>{point}</li>
+                  ))}
+                </ol>
+              ) : null}
+            </dd>
+          </div>
+        ))}
+        {plano === "A" && (
+          <div className="px-6 py-6">
+            <dt className="font-serif text-base font-semibold leading-snug text-zinc-900">
+              {PLAN_A_CLOUD_FAQ.q}
+            </dt>
+            <dd className={`mt-3 ${BODY}`}>{PLAN_A_CLOUD_FAQ.a}</dd>
+          </div>
+        )}
+      </dl>
+    </section>
+  );
+}
+
+function Clause({
+  icon: Icon,
+  title,
+  children,
+}: {
+  icon: typeof Scale;
+  title: string;
+  children: ReactNode;
+}) {
+  return (
+    <div className="border-b border-zinc-100 pb-8 last:border-0 last:pb-0">
+      <div className="mb-3 flex items-center gap-2">
+        <Icon className="size-4 text-zinc-600" strokeWidth={1.5} aria-hidden />
+        <h3 className="font-serif text-base font-semibold text-zinc-900">{title}</h3>
+      </div>
+      <div className={BODY}>{children}</div>
+    </div>
+  );
+}
+
+function SignatureBlock({
+  plano,
+  signed,
+  canSign,
+  acceptId,
+  legalName,
+  taxId,
+  email,
+  formAccepted,
+  displayTimestamp,
+  onLegalName,
+  onTaxId,
+  onEmail,
+  onFormAccepted,
+  onSign,
+}: {
+  plano: Plano;
+  signed: boolean;
+  canSign: boolean;
+  acceptId: string;
+  legalName: string;
+  taxId: string;
+  email: string;
+  formAccepted: boolean;
+  displayTimestamp: string;
+  onLegalName: (value: string) => void;
+  onTaxId: (value: string) => void;
+  onEmail: (value: string) => void;
+  onFormAccepted: (value: boolean) => void;
+  onSign: () => void;
+}) {
+  const buttonLabel = signed
+    ? `Assinatura registrada — Plano ${plano}`
+    : `Assinar e Contratar Plano ${plano}`;
+
+  return (
+    <section aria-labelledby="e-signature-heading" className="border-t-2 border-zinc-300 pt-10">
+      <div className="rounded-lg border-2 border-dashed border-zinc-300 bg-white p-6 shadow-sm">
+        <p className={LABEL}>Contrato formal · Plano {plano}</p>
+        <h2 id="e-signature-heading" className="mt-2 font-serif text-xl font-semibold text-zinc-900">
+          Termo de aceite e assinatura eletrônica
+        </h2>
+        <p className={`mt-3 ${BODY}`}>
+          A assinatura vale para o Plano {plano}, nas cláusulas exibidas acima.
+        </p>
+
+        <div className="mt-8 grid gap-5 sm:grid-cols-2">
+          <div className="sm:col-span-2">
+            <label htmlFor="legal-name" className="text-xs font-medium text-zinc-800">
+              Nome completo / Razão social
+            </label>
+            <input
+              id="legal-name"
+              type="text"
+              autoComplete="name"
+              disabled={signed}
+              value={legalName}
+              onChange={(e) => onLegalName(e.target.value)}
+              className={INPUT}
+              placeholder={contractData.clientSignatory}
+            />
+          </div>
+          <div>
+            <label htmlFor="tax-id" className="text-xs font-medium text-zinc-800">
+              CPF / CNPJ
+            </label>
+            <input
+              id="tax-id"
+              type="text"
+              inputMode="numeric"
+              autoComplete="off"
+              disabled={signed}
+              value={taxId}
+              onChange={(e) => onTaxId(e.target.value)}
+              className={INPUT}
+              placeholder="000.000.000-00"
+            />
+          </div>
+          <div>
+            <label htmlFor="legal-email" className="text-xs font-medium text-zinc-800">
+              E-mail
+            </label>
+            <input
+              id="legal-email"
+              type="email"
+              autoComplete="email"
+              disabled={signed}
+              value={email}
+              onChange={(e) => onEmail(e.target.value)}
+              className={INPUT}
+              placeholder="contato@masterglass.com.br"
+            />
+          </div>
+        </div>
+
+        <p className="mt-6 text-xs text-zinc-600">
+          Data e hora do aceite:{" "}
+          <span className="font-mono text-sm font-medium text-zinc-900">{displayTimestamp}</span>
+        </p>
+
+        <label
+          htmlFor={acceptId}
+          className="mt-6 flex cursor-pointer items-start gap-3 rounded-lg border border-zinc-200 bg-[#FDFBF7] p-4"
+        >
+          <input
+            id={acceptId}
+            type="checkbox"
+            checked={formAccepted}
+            disabled={signed}
+            onChange={(e) => onFormAccepted(e.target.checked)}
+            className="mt-0.5 size-4 shrink-0 rounded border-zinc-300 accent-[#4A5D23]"
+          />
+          <span className="text-sm text-zinc-700">{FORM_ACCEPT_LABEL}</span>
+        </label>
+
+        <button
+          type="button"
+          onClick={onSign}
+          disabled={!canSign}
+          className={`mt-6 flex min-h-12 w-full items-center justify-center gap-2 rounded-full px-6 text-sm transition ${CTA_FOCUS} ${
+            signed ? "bg-zinc-300 font-semibold text-zinc-700" : BTN_SIGN
+          }`}
+        >
+          {signed ? <Check className="size-4" strokeWidth={2.5} aria-hidden /> : null}
+          {buttonLabel}
+        </button>
+        {!canSign && !signed ? (
+          <p className="mt-3 text-center text-xs text-zinc-500">
+            O botão permanece bloqueado até nome, CPF ou CNPJ, e-mail e a declaração.
+          </p>
+        ) : null}
+
+        <footer className="mt-12 border-t border-zinc-200 pt-6 text-xs leading-relaxed text-zinc-500">
+          <p>
+            Desenvolvido e Arquitetado por:{" "}
+            <span className="text-zinc-700">{contractData.architectCredit}</span>
+          </p>
+          <p className="mt-1">
+            Stack: <span className="text-zinc-700">{contractData.stack}</span>
+          </p>
+        </footer>
+      </div>
+    </section>
   );
 }
